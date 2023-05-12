@@ -1,13 +1,41 @@
 import pandas as pd
+import os
 
-def data_decoder(addr):
+
+def batch_data_decoder(data_addr):
     """
-    This function is used to decode data from csv file.
+    This function is used to decode data from csv file in batches.
     """
+    # loop all files in the directory
+    data = {}
+    for file in os.listdir(data_addr):
+        # get file name
+        file_name = os.path.splitext(file)[0]
+        # get file address
+        file_addr = data_addr + '\\' + file
+        # input data from csv file
+        data_mid = data_input(file_addr)
+        data[file_name] = return_feature_dict(data_mid)
+    return data
 
 
-    return
+def data_concat(data):
+    X = []
+    y = []
+    for item in data:
+        for key in data[item]:
+            X.append(data[item][key])
+            y.append(label_identifier(key))
+    return X, y
 
+
+def label_identifier(label):
+    if 'PE' in label:
+        return 0
+    elif 'PMMA' in label:
+        return 1
+    elif 'PS' in label:
+        return 2
 
 
 def data_input(addr):
@@ -22,20 +50,21 @@ def data_input(addr):
     data.rename(columns={data.columns[0]: 'wavenumber'}, inplace=True)
     return data
 
+
 def return_feature_dict(data):
     dict = {}
     # return the number of column in data
     sample_num = data.shape[1] - 1
     feature_loc = [551.15, 600.89, 998.37, 1141.78]
     for i in range(sample_num):
-        key = data.columns[i+1]
+        key = data.columns[i + 1]
         dict[key] = []
         # TODO: need to be optimized
         for item in feature_loc:
             if str(item) in data['wavenumber'].values:
                 for j in range(len(data['wavenumber'])):
                     if data.iloc[j, 0] == str(item):
-                        dict[key].append(float(data.iloc[j, i+1]))
+                        dict[key].append(float(data.iloc[j, i + 1]))
             else:
                 print('Error: feature is not in the wavenumber list.')
                 exit(-1)
@@ -48,5 +77,3 @@ def loop_csv(addr):
     """
 
     pass
-
-
