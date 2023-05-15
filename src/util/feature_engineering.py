@@ -1,14 +1,29 @@
+import numpy as np
 
-def norm(dict):
+def norm(X):
     """
     This function is used to normalize the data inside the samples
     :param dict:
     :return: dict
     """
-    for key in dict.keys():
-        max_value = max(dict[key])
-        min_value = min(dict[key])
-        for i in range(len(dict[key])):
-            dict[key][i] = (dict[key][i] - min_value) / (max_value - min_value)
+    # normalization x
+    for i in range(len(X)):
+        max_value = max(X[i])
+        min_value = min(X[i])
+        for j in range(len(X[i])):
+            X[i][j] = (X[i][j] - min_value) / (max_value - min_value)
+    return dict
 
+def zscore_norm(X):
+    """
+    This function is used to normalize the data inside the samples
+    :param dict:
+    :return: dict
+    """
+    # normalization x
+    for i in range(len(X)):
+        mean_value = np.mean(X[i])
+        std_value = np.std(X[i])
+        for j in range(len(X[i])):
+            X[i][j] = (X[i][j] - mean_value) / std_value
     return dict

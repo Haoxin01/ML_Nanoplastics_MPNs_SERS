@@ -42,16 +42,15 @@ def pca_visualization(principalDf, label):
     plt.legend(targets, prop={'size': 15})
     plt.show()
 
-def incre_pca(X, y):
-    n_components = 2
-    ipca = IncrementalPCA(n_components=n_components, batch_size=10)
+def incre_pca(X, y, n_components):
+    ipca = IncrementalPCA(n_components=n_components, batch_size=3)
     X_ipca = ipca.fit_transform(X)
 
     pca = PCA(n_components=n_components)
     X_pca = pca.fit_transform(X)
 
-    print(X_pca)
-    print(X_ipca)
+    # list to array
+    y = np.array(y)
 
     colors = ["navy", "turquoise", "darkorange"]
 
@@ -68,11 +67,11 @@ def incre_pca(X, y):
 
         if "Incremental" in title:
             err = np.abs(np.abs(X_pca) - np.abs(X_ipca)).mean()
-            plt.title(title + " of iris dataset\nMean absolute unsigned error %.6f" % err)
+            plt.title(title + " of Nano-plastic dataset\nMean absolute unsigned error %.6f" % err)
         else:
-            plt.title(title + " of iris dataset")
+            plt.title(title + " of Nano-plastic dataset")
         plt.legend(loc="best", shadow=False, scatterpoints=1)
-        plt.axis([-500, 2000, -500, 2000])
+        plt.axis([-1, 1, -1, 1])
 
     plt.show()
 

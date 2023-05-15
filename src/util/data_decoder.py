@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-
+from feature_engineering import norm, zscore_norm
 
 def batch_data_decoder(data_addr):
     """
@@ -26,6 +26,9 @@ def data_concat(data):
         for key in data[item]:
             X.append(data[item][key])
             y.append(label_identifier(key))
+
+    X = zscore_norm(X)
+
     return X, y
 
 

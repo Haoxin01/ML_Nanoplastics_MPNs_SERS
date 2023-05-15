@@ -28,7 +28,8 @@ def main():
 
     X, y = data_concat(data)
 
-    incre_pca(X, y)
+
+    incre_pca(X, y, 2)
     # print(X)
     # print(y)
 
