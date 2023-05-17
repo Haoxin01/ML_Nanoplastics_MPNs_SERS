@@ -71,7 +71,7 @@ def incre_pca(X, y, n_components):
         else:
             plt.title(title + " of Nano-plastic dataset")
         plt.legend(loc="best", shadow=False, scatterpoints=1)
-        plt.axis([-1, 1, -1, 1])
+        plt.axis([-2.5, 2.5, -2.5, 2.5])
 
     plt.show()
 

@@ -26,4 +26,4 @@ def zscore_norm(X):
         std_value = np.std(X[i])
         for j in range(len(X[i])):
             X[i][j] = (X[i][j] - mean_value) / std_value
-    return dict
+    return X

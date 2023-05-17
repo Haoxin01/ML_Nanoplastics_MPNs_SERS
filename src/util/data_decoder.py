@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from feature_engineering import norm, zscore_norm
+from src.util.feature_engineering import norm, zscore_norm
 
 def batch_data_decoder(data_addr):
     """
