@@ -1,6 +1,8 @@
 import pandas as pd
 import os
+import numpy as np
 from src.util.feature_engineering import norm, zscore_norm
+import random
 
 def batch_data_decoder(data_addr):
     """
@@ -22,12 +24,18 @@ def batch_data_decoder(data_addr):
 def data_concat(data):
     X = []
     y = []
+    concat_data = {}
     for item in data:
         for key in data[item]:
-            X.append(data[item][key])
-            y.append(label_identifier(key))
+            concat_data[key] = data[item][key]
 
-    X = zscore_norm(X)
+    concat_data = shuffle(concat_data, random_state=0)
+
+    for key in concat_data:
+        X.append(concat_data[key])
+        y.append(label_identifier(key))
+
+    X = norm(X)
 
     return X, y
 
@@ -72,6 +80,19 @@ def return_feature_dict(data):
                 print('Error: feature is not in the wavenumber list.')
                 exit(-1)
     return dict
+
+def shuffle(dict_data, random_state):
+    """
+    This function is used to shuffle a dict.
+    """
+    # Convert dict items to a list
+    items = list(dict_data.items())
+    # Shuffle list
+    random.shuffle(items)
+    # Create new dictionary from shuffled list
+    shuffled_dict = dict(items)
+    return shuffled_dict
+
 
 
 def loop_csv(addr):

@@ -12,7 +12,7 @@ def norm(X):
         min_value = min(X[i])
         for j in range(len(X[i])):
             X[i][j] = (X[i][j] - min_value) / (max_value - min_value)
-    return dict
+    return X
 
 def zscore_norm(X):
     """
