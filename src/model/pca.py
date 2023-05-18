@@ -41,7 +41,9 @@ def pca_visualization(principalDf, label):
                     c=color,
                     s=50)
     plt.legend(targets, prop={'size': 15})
-    plt.show()
+    # save
+    plt.savefig('PCA of ' + label + '.png')
+
 
 def incre_pca(X, y, n_components):
     ipca = IncrementalPCA(n_components=n_components, batch_size=3)
@@ -49,7 +51,7 @@ def incre_pca(X, y, n_components):
 
     pca = PCA(n_components=n_components)
     X_pca = pca.fit_transform(X)
-    print(X_pca)
+    # print(X_pca)
     # list to array
     y = np.array(y)
 
@@ -72,7 +74,8 @@ def incre_pca(X, y, n_components):
         else:
             plt.title(title + " of Nano-plastic dataset")
         plt.legend(loc="best", shadow=False, scatterpoints=1)
-        plt.axis([-2.5, 2.5, -2.5, 2.5])
+        plt.axis([-1, 1, -1, 1])
 
-    plt.show()
+        # save
+        plt.savefig('result/' + title + " of Nano-plastic.png")
 
