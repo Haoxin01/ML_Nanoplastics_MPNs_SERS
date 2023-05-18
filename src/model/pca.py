@@ -18,6 +18,7 @@ def dim_reduction(data, n_components=2):
     pca = PCA(n_components=n_components)
     principalComponents = pca.fit_transform(data)
     principalDf = pd.DataFrame(data=principalComponents, columns=['PC1', 'PC2'])
+
     return principalDf
 
 
@@ -48,7 +49,7 @@ def incre_pca(X, y, n_components):
 
     pca = PCA(n_components=n_components)
     X_pca = pca.fit_transform(X)
-
+    print(X_pca)
     # list to array
     y = np.array(y)
 

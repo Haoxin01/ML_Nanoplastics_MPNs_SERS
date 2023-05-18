@@ -30,8 +30,8 @@ def main():
     print(X)
 
     incre_pca(X, y, 2)
-    # print(X)
-    # print(y)
+    #print(X)
+    print(y)
 
 
 
