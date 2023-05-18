@@ -78,4 +78,5 @@ def incre_pca(X, y, n_components):
 
         # save
         plt.savefig('result/' + title + " of Nano-plastic.png")
+        return pca, X_pca
 

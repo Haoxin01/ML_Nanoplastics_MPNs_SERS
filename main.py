@@ -34,16 +34,16 @@ def main():
     print(y)
 
     # principal component analysis
-    incre_pca(X, y, 2)
+    pca, X_pca = incre_pca(X, y, 2)
 
     # SVM
-    svm_model(X, y)
+    svm_model(X_pca, y)
 
     # KNN
-    knn_model(X, y)
+    knn_model(X_pca, y)
 
     # random forest, this use the dimension reduced data
-    rf_model(X, y)
+    rf_model(X_pca, y)
 
     # Add non-dimensional reduced data with random forest
 
