@@ -47,7 +47,8 @@ def label_identifier(label):
         return 1
     elif 'PS' in label:
         return 2
-
+    elif 'PLA' in label:
+        return 3
 
 def data_input(addr):
     """
@@ -66,7 +67,7 @@ def return_feature_dict(data):
     dict = {}
     # return the number of column in data
     sample_num = data.shape[1] - 1
-    feature_loc = [551.15, 615.29, 998.37, 1134.67]
+    feature_loc = [551.15, 869.87, 998.37, 1134.67]
     for i in range(sample_num):
         key = data.columns[i + 1]
         dict[key] = []
