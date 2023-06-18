@@ -21,7 +21,7 @@ def batch_data_decoder(data_addr):
     return data
 
 
-def data_concat(data):
+def data_concat(data, if_shuffle: bool, shuffle_seed):
     X = []
     y = []
     concat_data = {}
@@ -29,7 +29,10 @@ def data_concat(data):
         for key in data[item]:
             concat_data[key] = data[item][key]
 
-    concat_data = shuffle(concat_data, random_state=0)
+    # print('concat_data', concat_data)
+
+    if if_shuffle:
+        concat_data = shuffle_with_seed(concat_data, random_state=shuffle_seed)
 
     for key in concat_data:
         X.append(concat_data[key])
@@ -41,7 +44,9 @@ def data_concat(data):
 
 
 def label_identifier(label):
-    if 'PE' in label:
+    if 'UD' in label:
+        return 4
+    elif 'PE' in label:
         return 0
     elif 'PMMA' in label:
         return 1
@@ -49,6 +54,9 @@ def label_identifier(label):
         return 2
     elif 'PLA' in label:
         return 3
+    else:
+        print('Error: label is not in the label list.')
+        exit(-1)
 
 def data_input(addr):
     """
@@ -68,6 +76,7 @@ def return_feature_dict(data):
     # return the number of column in data
     sample_num = data.shape[1] - 1
     feature_loc = [551.15, 869.87, 998.37, 1134.67]
+    # feature_loc = [551.15,811.69, 869.87, 998.37, 1134.67, 1295.78, 1451.36, 1468.78, 1541.88, 1600.84]
     for i in range(sample_num):
         key = data.columns[i + 1]
         dict[key] = []
@@ -88,12 +97,24 @@ def shuffle(dict_data, random_state):
     """
     # Convert dict items to a list
     items = list(dict_data.items())
-    # Shuffle list
+    # Shuffle list with seed
     random.shuffle(items)
     # Create new dictionary from shuffled list
     shuffled_dict = dict(items)
     return shuffled_dict
 
+
+def shuffle_with_seed(dict_data, random_state):
+    """
+    This function is used to shuffle a dict with seed.
+    """
+    # Convert dict items to a list
+    items = list(dict_data.items())
+    # Shuffle list with seed
+    random.Random(random_state).shuffle(items)
+    # Create new dictionary from shuffled list
+    shuffled_dict = dict(items)
+    return shuffled_dict
 
 
 def loop_csv(addr):

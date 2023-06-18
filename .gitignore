@@ -3,3 +3,7 @@
 .pyc
 src/model/__pycache__
 src/util/__pycache__
+
+sample_data
+
+src/data
