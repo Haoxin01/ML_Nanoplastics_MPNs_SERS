@@ -6,8 +6,8 @@ def build_result_dir(sys_path):
     if not os.path.exists(result_dir):
         os.makedirs(result_dir)
 
-    # build visualization result directory if not exist
-    visualization_dir = result_dir + '\\visualization'
+    # build preanalysis result directory if not exist
+    visualization_dir = result_dir + '\\preanalysis'
     if not os.path.exists(visualization_dir):
         os.makedirs(visualization_dir)
 

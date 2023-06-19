@@ -9,6 +9,7 @@ from src.model.pca import incre_pca
 from src.model.svm_model import svm_model
 from src.model.knn_model import knn_model
 from src.model.rf_model import rf_model
+from src.model.iforest_mdoel import isoForest
 
 
 def main():
@@ -28,26 +29,39 @@ def main():
     data = batch_data_decoder(data_addr)
 
     # shuffle and concat data
-    X, y = data_concat(data)
+    X, y = data_concat(data, if_shuffle=True, shuffle_seed=0)
 
     print(X)
     print(y)
 
     # principal component analysis
-    incre_pca(X, y, 2)
+    # incre_pca(X, y, 2)
     pca, X_pca = incre_pca(X, y, 2)
 
-    var = pca.explained_variance_ratio_
-    print("\ndata_remaining: ")
-    print(var)
-    # SVM
+    # var = pca.explained_variance_ratio_
+    # print("\ndata_remaining: ")
+    # print(var)
+
+    print('\nX_pca: ', X_pca)
+    print('\ny: ', y)
+
+    # isoforest model
+    # isf_model = isoForest(X_pca, y, '')
+    # isf_model.pre_visualization()
+    # isf_model.train()
+    # isf_model.plot_discrete()
+    # isf_model.plot_path_length_decision_boundary()
+    # isf_model.predict()
+
+
+    # # SVM
     svm_model(X_pca, y)
-
-    # KNN
+    #
+    # # KNN
     knn_model(X_pca, y)
-
-    # random forest, this use the dimension reduced data
-    rf_model(X_pca, y)
+    #
+    # # random forest, this use the dimension reduced data
+    # rf_model(X_pca, y)
 
     # Add non-dimensional reduced data with random forest
 
