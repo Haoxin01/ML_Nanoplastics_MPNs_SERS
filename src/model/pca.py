@@ -55,29 +55,29 @@ def incre_pca(X, y, n_components):
     # list to array
     y = np.array(y)
 
-    # colors = ["navy", "turquoise", "darkorange", "black", "red"]
-    #
-    # for X_transformed, title in [(X_ipca, "Incremental PCA"), (X_pca, "PCA")]:
-    #     plt.figure(figsize=(8, 8))
-    #     for color, i, target_name in zip(colors, [0, 1, 2, 3, 4], ['PE', 'PMMA', 'PS', 'PLA', 'Undetected']):
-    #         plt.scatter(
-    #             X_transformed[y == i, 0],
-    #             X_transformed[y == i, 1],
-    #             color=color,
-    #             lw=2,
-    #             label=target_name,
-    #         )
-    #
-    #     if "Incremental" in title:
-    #         err = np.abs(np.abs(X_pca) - np.abs(X_ipca)).mean()
-    #         plt.title(title + " of Nano-plastic dataset\nMean absolute unsigned error %.6f" % err)
-    #     else:
-    #         plt.title(title + " of Nano-plastic dataset")
-    #     plt.legend(loc="best", shadow=False, scatterpoints=1)
-    #     plt.axis([-1, 1, -1, 1])
-    #
-    #     # save
-    #     plt.savefig('result/' + title + " of Nano-plastic.png")
+    colors = ["navy", "turquoise", "darkorange", "black", "red"]
+
+    for X_transformed, title in [(X_ipca, "Incremental PCA"), (X_pca, "PCA")]:
+        plt.figure(figsize=(8, 8))
+        for color, i, target_name in zip(colors, [0, 1, 2, 3, 4], ['PE', 'PMMA', 'PS', 'PLA', 'Undetected']):
+            plt.scatter(
+                X_transformed[y == i, 0],
+                X_transformed[y == i, 1],
+                color=color,
+                lw=2,
+                label=target_name,
+            )
+
+        if "Incremental" in title:
+            err = np.abs(np.abs(X_pca) - np.abs(X_ipca)).mean()
+            plt.title(title + " of Nano-plastic dataset\nMean absolute unsigned error %.6f" % err)
+        else:
+            plt.title(title + " of Nano-plastic dataset")
+        plt.legend(loc="best", shadow=False, scatterpoints=1)
+        plt.axis([-1, 1, -1, 1])
+
+        # save
+        plt.savefig('result/' + title + " of Nano-plastic.png")
 
     return pca, X_pca
 

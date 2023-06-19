@@ -65,9 +65,9 @@ def data_input(addr):
     # TODO: need to be optimized
     data = pd.read_csv(addr)
     # delete first column and first row
-    data = data.iloc[1:, 1:]
+    # data = data.iloc[1:, 1:]
     # rename first column
-    data.rename(columns={data.columns[0]: 'wavenumber'}, inplace=True)
+    # data.rename(columns={data.columns[0]: 'wavenumber'}, inplace=True)
     return data
 
 
@@ -82,9 +82,11 @@ def return_feature_dict(data):
         dict[key] = []
         # TODO: need to be optimized
         for item in feature_loc:
-            if str(item) in data['wavenumber'].values:
+            # if str(item) in data['wavenumber'].values:
+            if item in data['wavenumber'].values:
                 for j in range(len(data['wavenumber'])):
-                    if data.iloc[j, 0] == str(item):
+                    # if data.iloc[j, 0] == str(item):
+                    if data.iloc[j, 0] == item:
                         dict[key].append(float(data.iloc[j, i + 1]))
             else:
                 print('Error: feature is not in the wavenumber list.')

@@ -46,19 +46,19 @@ def main():
     print('\ny: ', y)
 
     # isoforest model
-    isf_model = isoForest(X_pca, y, '')
-    isf_model.pre_visualization()
-    isf_model.train()
-    isf_model.plot_discrete()
-    isf_model.plot_path_length_decision_boundary()
-    isf_model.predict()
+    # isf_model = isoForest(X_pca, y, '')
+    # isf_model.pre_visualization()
+    # isf_model.train()
+    # isf_model.plot_discrete()
+    # isf_model.plot_path_length_decision_boundary()
+    # isf_model.predict()
 
 
     # # SVM
-    # svm_model(X_pca, y)
+    svm_model(X_pca, y)
     #
     # # KNN
-    # knn_model(X_pca, y)
+    knn_model(X_pca, y)
     #
     # # random forest, this use the dimension reduced data
     # rf_model(X_pca, y)
