@@ -44,16 +44,12 @@ def data_concat(data, if_shuffle: bool, shuffle_seed):
 
 
 def label_identifier(label):
-    if 'UD' in label:
-        return 4
+    if 'PS_PE' in label:
+        return 2
+    elif 'PS' in label:
+        return 1
     elif 'PE' in label:
         return 0
-    elif 'PMMA' in label:
-        return 1
-    elif 'PS' in label:
-        return 2
-    elif 'PLA' in label:
-        return 3
     else:
         print('Error: label is not in the label list.')
         exit(-1)
@@ -75,8 +71,8 @@ def return_feature_dict(data):
     dict = {}
     # return the number of column in data
     sample_num = data.shape[1] - 1
-    feature_loc = [551.15, 869.87, 998.37, 1134.67]
-    # feature_loc = [551.15,811.69, 869.87, 998.37, 1134.67, 1295.78, 1451.36, 1468.78, 1541.88, 1600.84]
+    feature_loc = [811.69, 869.87, 998.37, 1295.78]
+    # feature_loc = [551.15, 811.69, 869.87, 998.37, 1134.67, 1295.78, 1451.36, 1468.78, 1541.88, 1600.84]
     for i in range(sample_num):
         key = data.columns[i + 1]
         dict[key] = []

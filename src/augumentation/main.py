@@ -1,7 +1,6 @@
-from augmentation import *
-import random
+from augmentation import data_augmentation
 
 if __name__ == '__main__':
-    for i in range(10):
-        random_number = random.random()
-        print(random_number)
+    ratio = 1/15
+    times = 10
+    data_augmentation('data', ratio, times)

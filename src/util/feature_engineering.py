@@ -16,7 +16,10 @@ def norm(X):
         max_value = max(X[i])
         min_value = min(X[i])
         for j in range(len(X[i])):
-            X[i][j] = (X[i][j] - min_value) / (max_value - min_value)
+            if max_value == min_value:
+                X[i][j] = 0  # Or whatever value you want in this case
+            else:
+                X[i][j] = (X[i][j] - min_value) / (max_value - min_value)
     return X
 
 def zscore_norm(X):
@@ -92,7 +95,7 @@ def plot_fsp_set(num_features_range, scores, final_scores):
 
 def select_best_num_features(X, y, score_func=f_classif):
     model = SVC(kernel='linear')  # Creating an instance of SVC model for feature selection
-    num_features_range = list(range(1, 7))  # Change accordingly if you have different number of features
+    num_features_range = list(range(1, 6))  # Change accordingly if you have different number of features
     scores = []
     final_scores = []
 
