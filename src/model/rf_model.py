@@ -26,12 +26,22 @@ def rf_model(X, y):
     Z = Z.reshape(xx.shape)
 
     plt.figure(figsize=(10, 7))
-    sns.set_style('whitegrid')
-    plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Pastel2)
-    plt.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.Paired, s=20, edgecolors='k')
-    plt.title('Random Forest Decision Boundary')
-    plt.xlabel('First Principal Component')
-    plt.ylabel('Second Principal Component')
+    sns.set(font_scale=1.6, style="whitegrid")
+    cmap = plt.cm.YlGnBu
+    plt.contourf(xx, yy, Z, cmap=cmap, alpha=0.8)
+    scatter = plt.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap, s=50, edgecolors='k')
+    plt.title('RF Decision Boundary', fontsize=28)
+    plt.xlabel('First Principal Component', fontsize=24)
+    plt.ylabel('Second Principal Component', fontsize=24)
+
+    # Define class labels and assign them to the legend
+    class_labels = ['PE', 'PS', 'PS_PE']
+    handles, _ = scatter.legend_elements()
+    legend1 = plt.legend(handles, class_labels, title="Classes", fontsize=22)
+    plt.setp(legend1.get_title(), fontsize='xx-large')
+
+    # Ensure the plot is displayed correctly with all labels visible
+    plt.tight_layout()
     plt.show()
 
-    return clf
+    return clf, y_test, y_pred

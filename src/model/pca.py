@@ -32,8 +32,8 @@ def pca_visualization(principalDf, label):
     plt.xlabel('PC1', fontsize=15)
     plt.ylabel('PC2', fontsize=15)
     plt.title('PCA of ' + label, fontsize=20)
-    targets = ['PE', 'PS', 'PLA', 'PMMA']
-    colors = ['r', 'g', 'b', 'y']
+    targets = ['PE', 'PS', 'PS_PE']
+    colors = ["navy", "turquoise", "darkorange"]
     for target, color in zip(targets, colors):
         indicesToKeep = principalDf['label'] == target
         plt.scatter(principalDf.loc[indicesToKeep, 'PC1'],
@@ -55,11 +55,11 @@ def incre_pca(X, y, n_components):
     # list to array
     y = np.array(y)
 
-    colors = ["navy", "turquoise", "darkorange", "black"]
+    colors = ["navy", "turquoise", "darkorange"]
 
     for X_transformed, title in [(X_ipca, "Incremental PCA"), (X_pca, "PCA")]:
         plt.figure(figsize=(8, 8))
-        for color, i, target_name in zip(colors, [0, 1, 2, 3], ['PE', 'PLA', 'PMMA', 'PS']):
+        for color, i, target_name in zip(colors, [0, 1, 2], ['PE', 'PS', 'PS_PE']):
             plt.scatter(
                 X_transformed[y == i, 0],
                 X_transformed[y == i, 1],
@@ -78,5 +78,6 @@ def incre_pca(X, y, n_components):
 
         # save
         plt.savefig('result/' + title + " of Nano-plastic.png")
-        return pca, X_pca
+
+    return pca, X_pca
 
