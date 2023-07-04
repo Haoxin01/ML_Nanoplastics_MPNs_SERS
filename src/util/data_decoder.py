@@ -44,7 +44,7 @@ def data_concat(data, if_shuffle: bool, shuffle_seed):
     for key in concat_data:
         X.append(concat_data[key])
         y.append(label_identifier(key))
-        if label_identifier(key) != 7:
+        if label_identifier(key) != 4:
             Xe.append(concat_data[key])
             ye.append(label_identifier(key))
 
@@ -57,13 +57,13 @@ def data_concat(data, if_shuffle: bool, shuffle_seed):
 
 def label_identifier(label):
     if 'UD' in label:
-        return 7
-    elif 'PS_PMMA' in label:
-        return 6
-    elif 'PS_PLA' in label:
-        return 5
-    elif 'PS_PE' in label:
         return 4
+    # elif 'PS_PMMA' in label:
+    #     return 6
+    # elif 'PS_PLA' in label:
+    #     return 5
+    # elif 'PS_PE' in label:
+    #     return 4
     elif 'PE' in label:
         return 0
     elif 'PLA' in label:
@@ -75,7 +75,7 @@ def label_identifier(label):
     else:
         print('Error: label is not in the label list, please check '
               'if the name of the csv files includes the following labels: '
-              'PE, PLA, PMMA, PS, PS_PE, PS_PLA, PS_PMMA, UD (undetected group).')
+              'PE, PLA, PMMA, PS, UD (undetected group).')
         exit(-1)
 
 def data_input(addr):

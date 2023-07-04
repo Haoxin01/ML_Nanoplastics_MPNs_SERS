@@ -16,10 +16,10 @@ def tsne_implementation_all(data, labels, n_components=2):
     # save
     tsneDf.to_csv(result_dir + '/all_tsne_to2d.csv', index=False)
     # use X_embedded and labels to plot
-    colors = ["navy", "turquoise", "darkorange", "red", "green", "blue", "yellow", "black"]
+    colors = ["navy", "turquoise", "darkorange", "red", "green"]
     plt.figure(figsize=(9, 9))
-    for color, i, target_name in zip(colors, [0, 1, 2, 3, 4, 5, 6, 7],
-                                        ['PE', 'PLA', 'PMMA', 'PS', 'PS_PE', 'PS_PLA', 'PA_PMMA', 'UD']):
+    for color, i, target_name in zip(colors, [0, 1, 2, 3, 4],
+                                        ['PE', 'PLA', 'PMMA', 'PS', 'UD']):
         plt.scatter(
             X_embedded[labels == i, 0],
             X_embedded[labels == i, 1],
@@ -74,9 +74,9 @@ def tsne_implementation_all(data, labels, n_components=2):
 
             # Plot the result
             plt.figure(figsize=(9, 9))
-            colors = ["navy", "turquoise", "darkorange", "red", "green", "blue", "yellow", "black"]
-            for color, i, target_name in zip(colors, [0, 1, 2, 3, 4, 5, 6, 7],
-                                             ['PE', 'PLA', 'PMMA', 'PS', 'PS_PE', 'PS_PLA', 'PA_PMMA', 'UD']):
+            colors = ["navy", "turquoise", "darkorange", "red", "green"]
+            for color, i, target_name in zip(colors, [0, 1, 2, 3, 4],
+                                             ['PE', 'PLA', 'PMMA', 'PS', 'UD']):
                 plt.scatter(
                     X_embedded[labels == i, 0],
                     X_embedded[labels == i, 1],
@@ -99,10 +99,10 @@ def tsne_implementation_udexcluded(data, labels, n_components=2):
     # save
     tsneDf.to_csv(result_dir + '/udexcluded_tsne_to2d.csv', index=False)
     # use X_embedded and labels to plot
-    colors = ["navy", "turquoise", "darkorange", "red", "green", "blue", "yellow"]
+    colors = ["navy", "turquoise", "darkorange", "red"]
     plt.figure(figsize=(9, 9))
-    for color, i, target_name in zip(colors, [0, 1, 2, 3, 4, 5, 6],
-                                        ['PE', 'PLA', 'PMMA', 'PS', 'PS_PE', 'PS_PLA', 'PA_PMMA']):
+    for color, i, target_name in zip(colors, [0, 1, 2, 3],
+                                        ['PE', 'PLA', 'PMMA', 'PS']):
         plt.scatter(
             X_embedded[labels == i, 0],
             X_embedded[labels == i, 1],
@@ -157,9 +157,9 @@ def tsne_implementation_udexcluded(data, labels, n_components=2):
 
             # Plot the result
             plt.figure(figsize=(9, 9))
-            colors = ["navy", "turquoise", "darkorange", "red", "green", "blue", "yellow"]
-            for color, i, target_name in zip(colors, [0, 1, 2, 3, 4, 5, 6],
-                                             ['PE', 'PLA', 'PMMA', 'PS', 'PS_PE', 'PS_PLA', 'PA_PMMA']):
+            colors = ["navy", "turquoise", "darkorange", "red"]
+            for color, i, target_name in zip(colors, [0, 1, 2, 3],
+                                             ['PE', 'PLA', 'PMMA', 'PS']):
                 plt.scatter(
                     X_embedded[labels == i, 0],
                     X_embedded[labels == i, 1],

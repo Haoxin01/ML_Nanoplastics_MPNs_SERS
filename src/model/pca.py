@@ -20,14 +20,14 @@ def pca(X, y, n_components, ie):
     # list to array
     y = np.array(y)
     if ie == 'all':
-        colors = ["navy", "turquoise", "darkorange", "red", "green", "blue", "yellow", "black"]
+        colors = ["navy", "turquoise", "darkorange", "red", "green"]
     else:
-        colors = ["navy", "turquoise", "darkorange", "red", "green", "blue", "yellow"]
+        colors = ["navy", "turquoise", "darkorange", "red"]
 
     for X_transformed, title in [(X_ipca, "Incremental PCA"), (X_pca, "PCA")]:
         plt.figure(figsize=(8, 8))
-        for color, i, target_name in zip(colors, [0, 1, 2, 3, 4, 5, 6, 7],
-                                         ['PE', 'PLA', 'PMMA', 'PS', 'PS_PE', 'PS_PLA', 'PA_PMMA', 'UD']):
+        for color, i, target_name in zip(colors, [0, 1, 2, 3, 4],
+                                         ['PE', 'PLA', 'PMMA', 'PS', 'UD']):
             plt.scatter(
                 X_transformed[y == i, 0],
                 X_transformed[y == i, 1],

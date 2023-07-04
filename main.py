@@ -46,7 +46,7 @@ def main():
     # Dimension reduction START -----------------------------------------------------
     # PCA dimension reduction
     print('PCA dimension reduction for data including undetected data...')
-    # X_pca = pca(X, y, 2, 'all')
+    # Xe_pca = pca(X, y, 2, 'all')
     print('PCA dimension reduction for data excluding undetected data...')
     # Xe_pca = pca(Xe, ye, 2, 'UD_excluded')
 
@@ -58,9 +58,9 @@ def main():
 
     # LDA dimension reduction
     print('LDA dimension reduction for data including undetected data...')
-    Xe_lda = lda_all(X, y, 2)
+    # Xe_lda = lda_all(X, y, 2)
     print('LDA dimension reduction for data excluding undetected data...')
-    X_lda = lda_udexcluded(Xe, ye, 2)
+    # X_lda = lda_udexcluded(Xe, ye, 2)
     # Dimension reduction END -------------------------------------------------
 
     # Outliner detection START -------------------------------------------------
