@@ -52,9 +52,9 @@ def main():
 
     # t-SNE dimension reduction
     print('t-SNE dimension reduction for data including undetected data...')
-    # X_tsne = tsne_implementation_all(X, y, 2)
+    X_tsne = tsne_implementation_all(X, y, 2)
     print('t-SNE dimension reduction for data excluding undetected data...')
-    # Xe_tsne = tsne_implementation_udexcluded(Xe, ye, 2)
+    Xe_tsne = tsne_implementation_udexcluded(Xe, ye, 2)
 
     # LDA dimension reduction
     print('LDA dimension reduction for data including undetected data...')
