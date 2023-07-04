@@ -8,11 +8,12 @@ The readme file only contains the basic information of this work, please refer t
 ## Data
 ### Brief description
 Brief description of the data used in this work ......
+The original data is stored in the `original_data` folder for the reference.
 ### Data category
 The data used in this work is divided into several categories, including ......
 ### Data augumentation
 The data augumentation methods used in this work include ......
-
+The augumented data is stored in the `sample_augumented_data` folder for the reference.
 ## Methods
 ### Outliner detection
 
@@ -38,7 +39,12 @@ them by using the following command:
 ```shell
 pip install -r requirements.txt
 ```
-
+You can also run the program with the following command:
+```shell
+python main.py
+```
+The program will take the data from `sample_augumented_data` folder and output the results in the `result` folder.
+You can set your own preferred algorithms for modelling and evaluation.
 
 ## Acknowledgement
 

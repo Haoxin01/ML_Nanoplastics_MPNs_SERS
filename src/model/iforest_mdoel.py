@@ -17,7 +17,6 @@ class isoForest():
         self.vis_y = None
         self.handles = None
         self.clf = None
-        rng = np.random.RandomState(42)
         self.preprocess()
 
     def preprocess(self):
@@ -35,7 +34,6 @@ class isoForest():
         self.vis_X = self.X
         # replace 0, 1, 2, 3, with 1, and 4 with -1 use lambda
         self.vis_y = np.array(list(map(lambda x: 1 if x < 4 else -1, self.y)))
-
 
     def pre_visualization(self):
         X = self.vis_X

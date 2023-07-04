@@ -6,60 +6,28 @@ from sklearn.preprocessing import StandardScaler
 import warnings
 import numpy as np
 
-mpl.use('TkAgg')
-warnings.filterwarnings('ignore')
+# mpl.use('TkAgg')
+# warnings.filterwarnings('ignore')
 
-
-def dim_reduction(data, n_components=2):
-    """
-    This function is used to reduce the dimension of data.
-    """
-    data = StandardScaler().fit_transform(data)
-    pca = PCA(n_components=n_components)
-    principalComponents = pca.fit_transform(data)
-    principalDf = pd.DataFrame(data=principalComponents, columns=['PC1', 'PC2'])
-
-    return principalDf
-
-
-def pca_visualization(principalDf, label):
-    """
-    This function is used to visualize the data after PCA.
-    """
-    plt.figure(figsize=(8, 8))
-    plt.xticks(fontsize=12)
-    plt.yticks(fontsize=14)
-    plt.xlabel('PC1', fontsize=15)
-    plt.ylabel('PC2', fontsize=15)
-    plt.title('PCA of ' + label, fontsize=20)
-    targets = ['PE', 'PS', 'PS_PE']
-    colors = ["navy", "turquoise", "darkorange"]
-    for target, color in zip(targets, colors):
-        indicesToKeep = principalDf['label'] == target
-        plt.scatter(principalDf.loc[indicesToKeep, 'PC1'],
-                    principalDf.loc[indicesToKeep, 'PC2'],
-                    c=color,
-                    s=50)
-    plt.legend(targets, prop={'size': 15})
-    # save
-    plt.savefig('PCA of ' + label + '.png')
-
-
-def incre_pca(X, y, n_components):
+# PCA and incremental PCA
+def pca(X, y, n_components, ie):
     ipca = IncrementalPCA(n_components=n_components, batch_size=3)
     X_ipca = ipca.fit_transform(X)
 
     pca = PCA(n_components=n_components)
     X_pca = pca.fit_transform(X)
-    # print(X_pca)
+
     # list to array
     y = np.array(y)
-
-    colors = ["navy", "turquoise", "darkorange"]
+    if ie == 'all':
+        colors = ["navy", "turquoise", "darkorange", "red", "green", "blue", "yellow", "black"]
+    else:
+        colors = ["navy", "turquoise", "darkorange", "red", "green", "blue", "yellow"]
 
     for X_transformed, title in [(X_ipca, "Incremental PCA"), (X_pca, "PCA")]:
         plt.figure(figsize=(8, 8))
-        for color, i, target_name in zip(colors, [0, 1, 2], ['PE', 'PS', 'PS_PE']):
+        for color, i, target_name in zip(colors, [0, 1, 2, 3, 4, 5, 6, 7],
+                                         ['PE', 'PLA', 'PMMA', 'PS', 'PS_PE', 'PS_PLA', 'PA_PMMA', 'UD']):
             plt.scatter(
                 X_transformed[y == i, 0],
                 X_transformed[y == i, 1],
@@ -77,7 +45,57 @@ def incre_pca(X, y, n_components):
         plt.axis([-1, 1, -1, 1])
 
         # save
-        plt.savefig('result/' + title + " of Nano-plastic.png")
+        plt.savefig('result/pca/' + title + ie + " of Nano-plastic.png")
+        plt.close()
 
-    return pca, X_pca
+    # stor information of pca and incre_pca to two txt files
+    with open('result/pca/'+ie+'_pca.txt', 'w') as f:
+        # wirte pca
+        f.write('PCA-------------------------------------------\n')
+        f.write('explained_variance_ratio_-------------------------------------------\n')
+        f.write(str(pca.explained_variance_ratio_) + '\n')
+        f.write('explained_variance_-------------------------------------------\n')
+        f.write(str(pca.explained_variance_) + '\n')
+        f.write('singular_values_-------------------------------------------\n')
+        f.write(str(pca.singular_values_) + '\n')
+        f.write('components_-------------------------------------------\n')
+        f.write(str(pca.components_) + '\n')
+        f.write('n_components_-------------------------------------------\n')
+        f.write(str(pca.n_components_) + '\n')
+        f.write('n_samples_-------------------------------------------\n')
+        f.write(str(pca.n_samples_) + '\n')
+        f.write('mean_-------------------------------------------\n')
+        f.write(str(pca.mean_) + '\n')
+        f.write('noise_variance_-------------------------------------------\n')
+        f.write(str(pca.noise_variance_) + '\n')
+        f.write('whiten-------------------------------------------\n')
+        f.write(str(pca.whiten) + '\n')
+        f.write('copy-------------------------------------------\n')
+        f.write(str(pca.copy) + '\n')
+        f.close()
+
+    with open('result/pca/'+ie+'_incre_pca.txt', 'w') as f:
+        # write incre_pca
+        f.write('Incremental PCA-------------------------------------------\n')
+        f.write('explained_variance_ratio_-------------------------------------------\n')
+        f.write(str(ipca.explained_variance_ratio_) + '\n')
+        f.write('explained_variance_-------------------------------------------\n')
+        f.write(str(ipca.explained_variance_) + '\n')
+        f.write('singular_values_-------------------------------------------\n')
+        f.write(str(ipca.singular_values_) + '\n')
+        f.write('components_-------------------------------------------\n')
+        f.write(str(ipca.components_) + '\n')
+        f.write('n_components_-------------------------------------------\n')
+        f.write(str(ipca.n_components_) + '\n')
+        f.write('mean_-------------------------------------------\n')
+        f.write(str(ipca.mean_) + '\n')
+        f.write('noise_variance_-------------------------------------------\n')
+        f.write(str(ipca.noise_variance_) + '\n')
+        f.write('whiten-------------------------------------------\n')
+        f.write(str(ipca.whiten) + '\n')
+        f.write('copy-------------------------------------------\n')
+        f.write(str(ipca.copy) + '\n')
+        f.close()
+
+    return X_pca
 

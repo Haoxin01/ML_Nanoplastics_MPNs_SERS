@@ -10,11 +10,13 @@ def batch_data_decoder(data_addr):
     """
     # loop all files in the directory
     data = {}
+    print('processing data in: ', data_addr, '...', 'filter data with 811.69, 869.87, 998.37, 1295.78.')
     for file in os.listdir(data_addr):
         # get file name
         file_name = os.path.splitext(file)[0]
+        print('processing and filter file: ', file_name, '...')
         # get file address
-        file_addr = data_addr + '\\' + file
+        file_addr = data_addr + '/' + file
         # input data from csv file
         data_mid = data_input(file_addr)
         data[file_name] = return_feature_dict(data_mid)
@@ -24,34 +26,56 @@ def batch_data_decoder(data_addr):
 def data_concat(data, if_shuffle: bool, shuffle_seed):
     X = []
     y = []
+    Xe = []
+    ye = []
     concat_data = {}
     for item in data:
+        print('processing: ', item, '...')
         for key in data[item]:
             concat_data[key] = data[item][key]
 
     # print('concat_data', concat_data)
 
+    print('shuffling concat_data with seed: ', shuffle_seed, '...')
     if if_shuffle:
         concat_data = shuffle_with_seed(concat_data, random_state=shuffle_seed)
 
+    print('divide concat_data into X and y...')
     for key in concat_data:
         X.append(concat_data[key])
         y.append(label_identifier(key))
+        if label_identifier(key) != 7:
+            Xe.append(concat_data[key])
+            ye.append(label_identifier(key))
 
+    print('normalizing X...')
     X = norm(X)
+    Xe = norm(Xe)
 
-    return X, y
+    return X, y, Xe, ye
 
 
 def label_identifier(label):
-    if 'PS_PE' in label:
-        return 2
-    elif 'PS' in label:
-        return 1
+    if 'UD' in label:
+        return 7
+    elif 'PS_PMMA' in label:
+        return 6
+    elif 'PS_PLA' in label:
+        return 5
+    elif 'PS_PE' in label:
+        return 4
     elif 'PE' in label:
         return 0
+    elif 'PLA' in label:
+        return 1
+    elif 'PMMA' in label:
+        return 2
+    elif 'PS' in label:
+        return 3
     else:
-        print('Error: label is not in the label list.')
+        print('Error: label is not in the label list, please check '
+              'if the name of the csv files includes the following labels: '
+              'PE, PLA, PMMA, PS, PS_PE, PS_PLA, PS_PMMA, UD (undetected group).')
         exit(-1)
 
 def data_input(addr):
@@ -78,6 +102,7 @@ def return_feature_dict(data):
         dict[key] = []
         # TODO: need to be optimized
         for item in feature_loc:
+            # print('processing feature: ', item, '...')
             # if str(item) in data['wavenumber'].values:
             if item in data['wavenumber'].values:
                 for j in range(len(data['wavenumber'])):

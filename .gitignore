@@ -4,3 +4,4 @@
 src/model/__pycache__
 src/util/__pycache__
 
+.DS_Store
