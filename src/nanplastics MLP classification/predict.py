@@ -11,8 +11,8 @@ import numpy as np
 # load model
 model = MLP().to(device)
 
-# load data
-# prepare data
+# load data_reference
+# prepare data_reference
 source_data_dir = 'sample_data'
 data = batch_data_decoder(source_data_dir)
 X, y = data_concat(data, if_shuffle=True, shuffle_seed=0)

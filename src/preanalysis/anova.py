@@ -1,24 +1,24 @@
 import scipy.stats as stats
 import pandas as pd
 
-# read data
-df_ud = pd.read_csv('../data/test/undetected groups.csv', index_col=0)
-df_pe = pd.read_csv('../data/test/PE.csv', index_col=0)
-df_pla = pd.read_csv('../data/test/PLA.csv', index_col=0)
-df_pmma = pd.read_csv('../data/test/PMMA.csv', index_col=0)
-df_ps = pd.read_csv('../data/test/PS.csv', index_col=0)
+# read data_reference
+df_ud = pd.read_csv('../../data_reference/original_data/undetected groups.csv', index_col=0)
+df_pe = pd.read_csv('../../data_reference/original_data/PE.csv', index_col=0)
+df_pla = pd.read_csv('../../data_reference/original_data/PLA.csv', index_col=0)
+df_pmma = pd.read_csv('../../data_reference/original_data/PMMA.csv', index_col=0)
+df_ps = pd.read_csv('../../data_reference/original_data/PS.csv', index_col=0)
 
 def anova_pe(df):
-    df_pe = pd.read_csv('../data/test/PE.csv', index_col=0)
+    df_pe = pd.read_csv('../../data_reference/original_data/PE.csv', index_col=0)
 
 def anova_pla(df):
-    df_pla = pd.read_csv('../data/test/PLA.csv', index_col=0)
+    df_pla = pd.read_csv('../../data_reference/original_data/PLA.csv', index_col=0)
 
 def anova_pmma(df):
-    df_pmma = pd.read_csv('../data/test/PMMA.csv', index_col=0)
+    df_pmma = pd.read_csv('../../data_reference/original_data/PMMA.csv', index_col=0)
 
 def anova_ps(df):
-    df_ps = pd.read_csv('../data/test/PS.csv', index_col=0)
+    df_ps = pd.read_csv('../../data_reference/original_data/PS.csv', index_col=0)
 
 def anova_test(df_ud):
     pass

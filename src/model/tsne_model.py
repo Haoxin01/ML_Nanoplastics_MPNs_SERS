@@ -61,33 +61,33 @@ def tsne_implementation_all(data, labels, n_components=2):
 
     # grid search
     # Set the possible values of perplexity and learning rate
-    perplexities = [10, 30, 50, 70]
-    learning_rates = [10, 100, 200, 500]
-    grid_search_dir = 'result/tsne/grid_search/all'
-
-    # Apply grid search
-    for perplexity in perplexities:
-        for learning_rate in learning_rates:
-            # Apply t-SNE with current parameter values
-            tsne = TSNE(n_components=2, perplexity=perplexity, learning_rate=learning_rate)
-            X_embedded = tsne.fit_transform(data)
-
-            # Plot the result
-            plt.figure(figsize=(9, 9))
-            colors = ["navy", "turquoise", "darkorange", "red", "green"]
-            for color, i, target_name in zip(colors, [0, 1, 2, 3, 4],
-                                             ['PE', 'PLA', 'PMMA', 'PS', 'UD']):
-                plt.scatter(
-                    X_embedded[labels == i, 0],
-                    X_embedded[labels == i, 1],
-                    color=color,
-                    lw=2,
-                    label=target_name,
-                )
-            plt.title(f'Perplexity: {perplexity}, Learning Rate: {learning_rate}')
-            plt.legend(loc="best", shadow=False, scatterpoints=1)
-            plt.savefig(grid_search_dir + f'/perplexity_{perplexity}_learning_rate_{learning_rate}.png')
-            plt.close()
+    # perplexities = [10, 30, 50, 70]
+    # learning_rates = [10, 100, 200, 500]
+    # grid_search_dir = 'result/tsne/grid_search/all'
+    #
+    # # Apply grid search
+    # for perplexity in perplexities:
+    #     for learning_rate in learning_rates:
+    #         # Apply t-SNE with current parameter values
+    #         tsne = TSNE(n_components=2, perplexity=perplexity, learning_rate=learning_rate)
+    #         X_embedded = tsne.fit_transform(data_reference)
+    #
+    #         # Plot the result
+    #         plt.figure(figsize=(9, 9))
+    #         colors = ["navy", "turquoise", "darkorange", "red", "green"]
+    #         for color, i, target_name in zip(colors, [0, 1, 2, 3, 4],
+    #                                          ['PE', 'PLA', 'PMMA', 'PS', 'UD']):
+    #             plt.scatter(
+    #                 X_embedded[labels == i, 0],
+    #                 X_embedded[labels == i, 1],
+    #                 color=color,
+    #                 lw=2,
+    #                 label=target_name,
+    #             )
+    #         plt.title(f'Perplexity: {perplexity}, Learning Rate: {learning_rate}')
+    #         plt.legend(loc="best", shadow=False, scatterpoints=1)
+    #         plt.savefig(grid_search_dir + f'/perplexity_{perplexity}_learning_rate_{learning_rate}.png')
+    #         plt.close()
     return X_embedded
 
 def tsne_implementation_udexcluded(data, labels, n_components=2):
@@ -175,14 +175,14 @@ def tsne_implementation_udexcluded(data, labels, n_components=2):
     return X_embedded
 
 
-# def tsne_dim_reduction(data, labels, n_components=2):
+# def tsne_dim_reduction(data_reference, labels, n_components=2):
 #     """
-#     This function is used to reduce the dimension of data using t-SNE.
+#     This function is used to reduce the dimension of data_reference using t-SNE.
 #     """
-#     data = StandardScaler().fit_transform(data)
+#     data_reference = StandardScaler().fit_transform(data_reference)
 #     tsne = TSNE(n_components=n_components)
-#     tsneComponents = tsne.fit_transform(data)
-#     tsneDf = pd.DataFrame(data=tsneComponents, columns=['TSNE1', 'TSNE2'])
+#     tsneComponents = tsne.fit_transform(data_reference)
+#     tsneDf = pd.DataFrame(data_reference=tsneComponents, columns=['TSNE1', 'TSNE2'])
 #
 #     # Add the labels back into the DataFrame
 #     tsneDf['label'] = labels
@@ -191,7 +191,7 @@ def tsne_implementation_udexcluded(data, labels, n_components=2):
 #
 # def tsne_visualization(tsneDf, label):
 #     """
-#     This function is used to visualize the data after t-SNE.
+#     This function is used to visualize the data_reference after t-SNE.
 #     """
 #     plt.figure(figsize=(8, 8))
 #     plt.xticks(fontsize=12)
@@ -217,7 +217,7 @@ def tsne_implementation_udexcluded(data, labels, n_components=2):
 #
 # def tsne_visualization(tsneDf, label):
 #     """
-#     This function is used to visualize the data after t-SNE.
+#     This function is used to visualize the data_reference after t-SNE.
 #     """
 #     plt.figure(figsize=(8, 8))
 #     plt.xticks(fontsize=12)

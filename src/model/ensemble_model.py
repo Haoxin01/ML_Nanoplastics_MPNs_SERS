@@ -8,12 +8,12 @@ from scipy.stats import uniform, randint
 
 
 
-# use ensemble learning to predict the label of test data, with svm adn random forest
+# use ensemble learning to predict the label of validation data_reference, with svm adn random forest
 def ensemble_learning(data, label):
     X, y = data, label
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
 
-    # standardize the data, since SVM are not scale invariant
+    # standardize the data_reference, since SVM are not scale invariant
     sc = StandardScaler()
     X_train = sc.fit_transform(X_train)
     X_test = sc.transform(X_test)
@@ -28,7 +28,7 @@ def ensemble_learning(data, label):
     # fit the ensemble classifier
     eclf.fit(X_train, y_train)
 
-    # predict the label of test data
+    # predict the label of validation data_reference
     y_pred = eclf.predict(X_test)
 
     # calculate the accuracy
@@ -41,7 +41,7 @@ def ensemble_learning_rsCV(data, label):
     X, y = data, label
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
 
-    # standardize the data, since SVM are not scale invariant
+    # standardize the data_reference, since SVM are not scale invariant
     sc = StandardScaler()
     X_train = sc.fit_transform(X_train)
     X_test = sc.transform(X_test)

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 def lda_all(data, target, n_dim):
     '''
     :param data: (n_samples, n_features)
-    :param target: data class
+    :param target: data_reference class
     :param n_dim: target dimension
     :return: (n_samples, n_dims)
     '''

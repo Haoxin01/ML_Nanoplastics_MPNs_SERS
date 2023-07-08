@@ -28,7 +28,7 @@ large_parabolas_lines = generate_parabolas((100, 1000), 1, x, 20)
 # Combine small parabolas lines and large parabolas lines into one dataset
 data = np.concatenate((small_parabolas_lines, large_parabolas_lines))
 
-# Create a DataFrame from the data
+# Create a DataFrame from the data_reference
 df = pd.DataFrame(data, columns=x)
 
 # Transpose the DataFrame to make X-axis values the columns and Y-axis values the rows

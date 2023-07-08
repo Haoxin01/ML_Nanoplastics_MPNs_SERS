@@ -1,23 +1,24 @@
-import pandas as pd
 import os
-import numpy as np
-from src.util.feature_engineering import norm, zscore_norm
 import random
+
+import numpy as np
+import pandas as pd
+from src.util.feature_engineering import norm, zscore_norm
 
 def batch_data_decoder(data_addr):
     """
-    This function is used to decode data from csv file in batches.
+    This function is used to decode data_reference from csv file in batches.
     """
     # loop all files in the directory
     data = {}
-    print('processing data in: ', data_addr, '...', 'filter data with 811.69, 869.87, 998.37, 1295.78.')
+    print('processing data_reference in: ', data_addr, '...', 'filter data_reference with 811.69, 869.87, 998.37, 1295.78.')
     for file in os.listdir(data_addr):
         # get file name
         file_name = os.path.splitext(file)[0]
         print('processing and filter file: ', file_name, '...')
         # get file address
         file_addr = data_addr + '/' + file
-        # input data from csv file
+        # input data_reference from csv file
         data_mid = data_input(file_addr)
         data[file_name] = return_feature_dict(data_mid)
     return data
@@ -80,20 +81,20 @@ def label_identifier(label):
 
 def data_input(addr):
     """
-    This function is used to input data from csv file.
+    This function is used to input data_reference from csv file.
     """
     # TODO: need to be optimized
     data = pd.read_csv(addr)
     # delete first column and first row
-    # data = data.iloc[1:, 1:]
+    # data_reference = data_reference.iloc[1:, 1:]
     # rename first column
-    # data.rename(columns={data.columns[0]: 'wavenumber'}, inplace=True)
+    # data_reference.rename(columns={data_reference.columns[0]: 'wavenumber'}, inplace=True)
     return data
 
 
 def return_feature_dict(data):
     dict = {}
-    # return the number of column in data
+    # return the number of column in data_reference
     sample_num = data.shape[1] - 1
     feature_loc = [811.69, 869.87, 998.37, 1295.78]
     # feature_loc = [551.15, 811.69, 869.87, 998.37, 1134.67, 1295.78, 1451.36, 1468.78, 1541.88, 1600.84]
@@ -103,10 +104,10 @@ def return_feature_dict(data):
         # TODO: need to be optimized
         for item in feature_loc:
             # print('processing feature: ', item, '...')
-            # if str(item) in data['wavenumber'].values:
+            # if str(item) in data_reference['wavenumber'].values:
             if item in data['wavenumber'].values:
                 for j in range(len(data['wavenumber'])):
-                    # if data.iloc[j, 0] == str(item):
+                    # if data_reference.iloc[j, 0] == str(item):
                     if data.iloc[j, 0] == item:
                         dict[key].append(float(data.iloc[j, i + 1]))
             else:
