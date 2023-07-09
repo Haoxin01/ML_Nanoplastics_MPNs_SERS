@@ -13,8 +13,8 @@ def svm_model(X, y, seed):
     clf.fit(X_train, y_train)
 
     y_pred = clf.predict(X_test)
-    print("\nSVM Accuracy: ")
-    print(accuracy_score(y_test, y_pred))
+    # print("\nSVM Accuracy: ")
+    # print(accuracy_score(y_test, y_pred))
 
     # # decision boundary plot
     # if isinstance(X, pd.DataFrame):

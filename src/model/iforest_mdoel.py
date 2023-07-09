@@ -25,7 +25,7 @@ class isoForest():
         self.preprocess_vis()
 
     def data_split(self):
-        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.05)
+        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.05, random_state=42)
         self.X_train = X_train
         self.X_test = X_test
         self.y_train = y_train
@@ -90,6 +90,7 @@ class isoForest():
                 model_full_path = model_path + '/' + model_name + '.joblib'
                 from joblib import dump, load
                 dump(self.clf, model_full_path)
+                dump(self, model_path + '/' + 'isoForest_self_model.joblib')
                 # save the seed, accuracy to txt
                 seed_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model'
                 seed_name = 'isoForest'
@@ -99,12 +100,14 @@ class isoForest():
                     f.write('\n')
                     f.write(str(accuracy))
                     f.close()
-
+                # visualization
+                self.plot_discrete(True, model_path)
+                self.plot_path_length_decision_boundary(True, model_path)
                 print('Current max accuracy', accuracy)
                 print('with seed', seed, '\n')
 
 
-    def plot_discrete(self):
+    def plot_discrete(self, if_loop=False, loop_path=None):
         X = self.vis_X
         disp = DecisionBoundaryDisplay.from_estimator(
             self.clf,
@@ -120,7 +123,10 @@ class isoForest():
         # save
         plt.savefig(self.path + 'plot_discrete.png')
 
-    def plot_path_length_decision_boundary(self):
+        if if_loop:
+            plt.savefig(loop_path + '/isoForest_discrete.png')
+
+    def plot_path_length_decision_boundary(self, if_loop=False, loop_path=None):
         disp = DecisionBoundaryDisplay.from_estimator(
             self.clf,
             self.X,
@@ -135,6 +141,10 @@ class isoForest():
         plt.show()
         # save
         plt.savefig(self.path + 'plot_path_length_decision_boundary.png')
+
+        if if_loop:
+            plt.savefig(loop_path + '/isoForest__decision_boundary.png')
+
 
     def predict(self):
         out = self.clf.predict(self.X_train)

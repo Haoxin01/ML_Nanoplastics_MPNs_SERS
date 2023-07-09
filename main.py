@@ -5,17 +5,14 @@ import sys
 import numpy as np
 from sklearn.decomposition import IncrementalPCA, PCA
 from src.model.iforest_mdoel import isoForest
-from src.model.knn_model import knn_model
+from src.model.knn_model import knn_model, knn_grid_search
 from src.model.lda_model import lda_all, lda_udexcluded
 from src.model.pca_model import pca
 from src.model.rf_model import rf_model
 from src.model.svm_model import svm_model
+from src.model.ensemble_model import ensemble_model
+from src.model.hpa_model import hpa_model
 from src.model.tsne_model import tsne_implementation_all, tsne_implementation_udexcluded
-from src.util.confusion_matrix import (
-    compute_metrics,
-    create_confusion_matrix,
-    plot_confusion_matrix,
-)
 from src.util.data_decoder import (
     batch_data_decoder,
     data_concat,
@@ -25,6 +22,7 @@ from src.util.data_decoder import (
 )
 from src.util.feature_engineering import norm, select_best_num_features
 from src.util.result_saver import build_result_dir
+from src.util.train_strategy import search_best_model
 
 
 def prediction():
@@ -55,13 +53,17 @@ def prediction():
         ye = np.load(cache_dir + '/ye.npy')
 
     # Env setting and data_reference loading END ------------------------------------------
+    model_cache_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model'
+    variable_cache_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/variable/non_mixture'
 
     # Dimension reduction START -----------------------------------------------------
     # PCA dimension reduction
     print('PCA dimension reduction for data_reference including undetected data_reference...')
     X_pca = pca(X, y, 2, 'all')
+    np.save(variable_cache_path + '/X_pca.npy', X_pca)
     print('PCA dimension reduction for data_reference excluding undetected data_reference...')
     Xe_pca = pca(Xe, ye, 2, 'UD_excluded')
+    np.save(variable_cache_path + '/Xe_pca.npy', Xe_pca)
 
     # t-SNE dimension reduction
     # print('t-SNE dimension reduction for data_reference including undetected data_reference...')
@@ -78,60 +80,58 @@ def prediction():
 
     # Outliner detection START -------------------------------------------------
     # isoforest model
-    isf_model = isoForest(X_pca, y, result_addr)
-    isf_model.pre_visualization()
-    isf_model.train()
-    isf_model.plot_discrete()
-    isf_model.plot_path_length_decision_boundary()
-    isf_model.predict()
-    isf_model.find_best_params()
+    # isf_model = isoForest(X_pca, y, result_addr)
+    # isf_model.pre_visualization()
+    # isf_model.train()
+    # isf_model.plot_discrete()
+    # isf_model.plot_path_length_decision_boundary()
+    # isf_model.predict()
+    # isf_model.find_best_params()
     # Outliner detection END ---------------------------------------------------
 
     # Nonaplastics classification START ----------------------------------------
     # list of your labels
-    labels = ['PE', 'PS', 'PS_PE']
+    labels = ['PE', 'PLA', 'PMMA', 'PS']
 
     # Support Vector Machine
-    for seed in range(1000):
-        svm_clf, svm_test, svm_pred = svm_model(Xe_pca, ye, seed)
-    # confusion matrix and metrics for SVM
-    svm_cm = create_confusion_matrix(svm_test, svm_pred, seed)
-    print("SVM Confusion Matrix: ")
-    print(svm_cm)
-    plot_confusion_matrix(svm_cm, labels)
-    svm_acc, svm_rec, svm_prec, svm_f1 = compute_metrics(svm_test, svm_pred)
-    print(f"SVM Accuracy: {svm_acc}, Recall: {svm_rec}, Precision: {svm_prec}, F1-score: {svm_f1}")
+    # search_best_model(Xe_pca, ye, svm_model, labels, model_cache_path, variable_cache_path)
 
-    # KNN
-    knn_clf, knn_test, knn_pred = knn_model(Xe_pca, ye)
-    # confusion matrix and metrics for KNN
-    knn_cm = create_confusion_matrix(knn_test, knn_pred)
-    print("KNN Confusion Matrix: ")
-    print(knn_cm)
-    plot_confusion_matrix(knn_cm, labels)
-    knn_acc, knn_rec, knn_prec, knn_f1 = compute_metrics(knn_test, knn_pred)
-    print(f"KNN Accuracy: {knn_acc}, Recall: {knn_rec}, Precision: {knn_prec}, F1-score: {knn_f1}")
+    # K nearest neighbors
+    knn_best_param = knn_grid_search(Xe_pca, ye)
+    search_best_model(Xe_pca, ye, knn_model, knn_best_param, labels, model_cache_path, variable_cache_path)
 
     # random forest, this use the dimension reduced data_reference
-    rf_clf, rf_test, rf_pred = rf_model(Xe_pca, ye)
-    # confusion matrix and metrics for RF
-    rf_cm = create_confusion_matrix(rf_test, rf_pred)
-    print("RF Confusion Matrix: ")
-    print(rf_cm)
-    plot_confusion_matrix(rf_cm, labels)
-    rf_acc, rf_rec, rf_prec, rf_f1 = compute_metrics(rf_test, rf_pred)
-    print(f"RF Accuracy: {rf_acc}, Recall: {rf_rec}, Precision: {rf_prec}, F1-score: {rf_f1}")
-    # Add non-dimensional reduced data_reference with random forest
+    search_best_model(Xe_pca, ye, rf_model, labels, model_cache_path, variable_cache_path)
 
-    # HPA
+    # non-dimensional reduced data_reference with random forest
+    search_best_model(Xe, ye, rf_model, labels, model_cache_path, variable_cache_path)
 
-    # emsemble model: voting classifier of SVM, KNN and RF
+    # hierarchical clustering
+    search_best_model(Xe_pca, ye, hpa_model, labels, model_cache_path, variable_cache_path)
 
+    # ensemble model: voting classifier of SVM, KNN and RF
+    search_best_model(Xe_pca, ye, ensemble_model, labels, model_cache_path, variable_cache_path)
+
+    print('Finished!')
     # Nonaplastics classification END ------------------------------------------
 
 
 def prediction_mixture():
-    pass
+    '''
+    This function is used to predict the mixture of plastics
+    '''
+    ## Env setting and data_reference loading START ----------------------------------------
+    model_cache_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model/mixture'
+    variable_cache_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/variable/mixture'
+
+    ## Env setting and data_reference loading END ------------------------------------------
+
+    ## PS+PMMA, PS, PMMA
+
+    ## PS+PLA, PS, PLA
+
+    ## PS+PE, PS, PE
+
 
 
 if __name__ == '__main__':
