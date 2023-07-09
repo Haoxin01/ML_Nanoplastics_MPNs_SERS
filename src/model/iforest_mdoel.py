@@ -17,6 +17,7 @@ class isoForest():
         self.vis_y = None
         self.handles = None
         self.clf = None
+        self.original_path = result_path
         self.preprocess()
 
     def preprocess(self):
@@ -67,10 +68,11 @@ class isoForest():
         minus1 = np.sum(self.y_train == -1)
         # number of 1 in y_test
         plus1 = np.sum(self.y_train == 1)
+        contamination = minus1 / (minus1 + plus1)
         for seed in range(1000):
             clf = IsolationForest(
                 n_estimators=80,
-                contamination=0.3,
+                contamination=contamination,
                 random_state=seed,
                 max_samples='auto',
                 max_features=2,
@@ -82,6 +84,22 @@ class isoForest():
             if caccuracy > accuracy:
                 accuracy = caccuracy
                 self.clf = clf
+                # save the model
+                model_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model'
+                model_name = 'isoForest'
+                model_full_path = model_path + '/' + model_name + '.joblib'
+                from joblib import dump, load
+                dump(self.clf, model_full_path)
+                # save the seed, accuracy to txt
+                seed_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model'
+                seed_name = 'isoForest'
+                seed_full_path = seed_path + '/' + seed_name + '.txt'
+                with open(seed_full_path, 'w') as f:
+                    f.write(str(seed))
+                    f.write('\n')
+                    f.write(str(accuracy))
+                    f.close()
+
                 print('Current max accuracy', accuracy)
                 print('with seed', seed, '\n')
 

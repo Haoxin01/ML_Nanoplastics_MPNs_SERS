@@ -11,7 +11,7 @@ def batch_data_decoder(data_addr):
     """
     # loop all files in the directory
     data = {}
-    print('processing data_reference in: ', data_addr, '...', 'filter data_reference with 811.69, 869.87, 998.37, 1295.78.')
+    print('processing data_reference in: ', data_addr, '...', 'filter data_reference with 811.69, 869.87, 998.37, 1295.78 of range -+ 5.')
     for file in os.listdir(data_addr):
         # get file name
         file_name = os.path.splitext(file)[0]
@@ -96,23 +96,46 @@ def return_feature_dict(data):
     dict = {}
     # return the number of column in data_reference
     sample_num = data.shape[1] - 1
-    feature_loc = [811.69, 869.87, 998.37, 1295.78]
+    feature_loc = [1000.22, 809.73, 871.79, 1297.47]
     # feature_loc = [551.15, 811.69, 869.87, 998.37, 1134.67, 1295.78, 1451.36, 1468.78, 1541.88, 1600.84]
+    feature_range = []
+    for item in feature_loc:
+        feature_range.append([item - 6, item + 6])
+
     for i in range(sample_num):
         key = data.columns[i + 1]
+        # get clomun index based on column name key
+        key_index = data.columns.get_loc(key)
         dict[key] = []
-        # TODO: need to be optimized
-        for item in feature_loc:
-            # print('processing feature: ', item, '...')
-            # if str(item) in data_reference['wavenumber'].values:
-            if item in data['wavenumber'].values:
-                for j in range(len(data['wavenumber'])):
-                    # if data_reference.iloc[j, 0] == str(item):
-                    if data.iloc[j, 0] == item:
-                        dict[key].append(float(data.iloc[j, i + 1]))
-            else:
-                print('Error: feature is not in the wavenumber list.')
-                exit(-1)
+        # TODO: could to be optimized
+        for list_range in feature_range:
+            start = list_range[0]
+            end = list_range[1]
+            max_peak = 0
+            # get all values in the range as a list
+            temp_list = data[(data['wavenumber'] >= start) & (data['wavenumber'] <= end)]['wavenumber'].values
+            # get the row index from temp_list
+            temp_list_index = data[(data['wavenumber'] >= start) & (data['wavenumber'] <= end)].index.tolist()
+            #  get the max peak in the range
+            for i in range(len(temp_list)-2):
+                if data.iloc[temp_list_index[i+1], key_index] > data.iloc[temp_list_index[i], key_index] and \
+                    data.iloc[temp_list_index[i+1], key_index] > data.iloc[temp_list_index[i+2], key_index]:
+                    if max_peak < data.iloc[temp_list_index[i+1], key_index]:
+                        max_peak = data.iloc[temp_list_index[i+1], key_index]
+
+            dict[key].append(max_peak)
+
+        # for item in feature_loc:
+        #     # print('processing feature: ', item, '...')
+        #     # if str(item) in data_reference['wavenumber'].values:
+        #     if item in data['wavenumber'].values:
+        #         for j in range(len(data['wavenumber'])):
+        #             # if data_reference.iloc[j, 0] == str(item):
+        #             if data.iloc[j, 0] == item:
+        #                 dict[key].append(float(data.iloc[j, i + 1]))
+        #     else:
+        #         print('Error: feature is not in the wavenumber list.')
+        #         exit(-1)
     return dict
 
 def shuffle(dict_data, random_state):

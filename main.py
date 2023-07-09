@@ -30,14 +30,16 @@ from src.util.result_saver import build_result_dir
 def prediction():
     # Env setting and data_reference loading START ----------------------------------------
     # set data_reference directory
-    data_addr = '/Users/shiyujiang/Desktop/Nanoplastics-ML/sample_data_augumented'
+    data_addr = '/Users/shiyujiang/Desktop/Nanoplastics-ML/data/sample_data_augmented'
+    mixture_addr = '/Users/shiyujiang/Desktop/Nanoplastics-ML/data/mixture_data_augmented'
     result_addr = '/Users/shiyujiang/Desktop/Nanoplastics-ML/result'
 
     # batch process all files and return X and y with shuffling
     # if cache exist, load from cache; else, process data_reference and store to cache
     cache_dir = 'result/cache'
     if not os.path.exists(cache_dir):
-        os.makedirs(cache_dir)
+        os.makedirs(cache_dir+'/model')
+        os.makedirs(cache_dir+'/variable')
         data = batch_data_decoder(data_addr)
         X, y, Xe, ye = data_concat(data, if_shuffle=True, shuffle_seed=0)
         # store X, y and Xe, ye to Cache
