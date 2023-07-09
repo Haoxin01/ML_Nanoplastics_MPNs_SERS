@@ -1,13 +1,13 @@
+import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.feature_selection import SelectKBest, f_classif
+import pandas as pd
+from sklearn.feature_selection import f_classif, SelectKBest
 from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC  # Import the model you're using
-import pandas as pd
-import matplotlib.pyplot as plt
 
 def norm(X):
     """
-    This function is used to normalize the data inside the samples
+    This function is used to normalize the data_reference inside the samples
     :param dict:
     :return: dict
     """
@@ -24,7 +24,7 @@ def norm(X):
 
 def zscore_norm(X):
     """
-    This function is used to normalize the data inside the samples
+    This function is used to normalize the data_reference inside the samples
     :param dict:
     :return: dict
     """

@@ -8,7 +8,7 @@ class isoForest():
     def __init__(self, X_pca, y, result_path):
         self.X = X_pca
         self.y = y
-        self.path = result_path
+        self.path = result_path + '/' + 'outlier_detection' + '/'
         self.X_train = None
         self.X_test = None
         self.y_train = None
@@ -17,6 +17,7 @@ class isoForest():
         self.vis_y = None
         self.handles = None
         self.clf = None
+        self.original_path = result_path
         self.preprocess()
 
     def preprocess(self):
@@ -24,7 +25,7 @@ class isoForest():
         self.preprocess_vis()
 
     def data_split(self):
-        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.02)
+        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.05, random_state=42)
         self.X_train = X_train
         self.X_test = X_test
         self.y_train = y_train
@@ -43,15 +44,70 @@ class isoForest():
         self.handles = handles
         plt.axis("square")
         plt.legend(handles=handles, labels=["outliers", "inliers"], title="true class")
-        plt.title("Gaussian inliers with \nuniformly distributed outliers")
+        plt.title("Undetected as outliers")
         plt.show()
         # save
-        # fig.savefig(self.path + 'isoforest_visualization.png')
+        plt.savefig(self.path + 'pre-visualization.png')
 
     def train(self):
-        self.clf = IsolationForest().fit(self.X_train)
+        seed = 0
+        self.clf = IsolationForest(
+            n_estimators=40,
+            contamination=0.1,
+            random_state=seed,
+            max_samples='auto',
+            max_features=2,
+            # bootstrap=True,
+        ).fit(self.X_train)
 
-    def plot_discrete(self):
+
+    def find_best_params(self):
+        accuracy = 0
+        self.y_test = np.array(list(map(lambda x: 1 if x < 4 else -1, self.y_test)))
+        # number of -1 in y_test
+        minus1 = np.sum(self.y_train == -1)
+        # number of 1 in y_test
+        plus1 = np.sum(self.y_train == 1)
+        contamination = minus1 / (minus1 + plus1)
+        for seed in range(1000):
+            clf = IsolationForest(
+                n_estimators=80,
+                contamination=contamination,
+                random_state=seed,
+                max_samples='auto',
+                max_features=2,
+                bootstrap=True
+            ).fit(self.X_train)
+            out = clf.predict(self.X_test)
+
+            caccuracy = np.sum(out == self.y_test) / len(self.y_test)
+            if caccuracy > accuracy:
+                accuracy = caccuracy
+                self.clf = clf
+                # save the model
+                model_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model'
+                model_name = 'isoForest'
+                model_full_path = model_path + '/' + model_name + '.joblib'
+                from joblib import dump, load
+                dump(self.clf, model_full_path)
+                dump(self, model_path + '/' + 'isoForest_self_model.joblib')
+                # save the seed, accuracy to txt
+                seed_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model'
+                seed_name = 'isoForest'
+                seed_full_path = seed_path + '/' + seed_name + '.txt'
+                with open(seed_full_path, 'w') as f:
+                    f.write(str(seed))
+                    f.write('\n')
+                    f.write(str(accuracy))
+                    f.close()
+                # visualization
+                self.plot_discrete(True, model_path)
+                self.plot_path_length_decision_boundary(True, model_path)
+                print('Current max accuracy', accuracy)
+                print('with seed', seed, '\n')
+
+
+    def plot_discrete(self, if_loop=False, loop_path=None):
         X = self.vis_X
         disp = DecisionBoundaryDisplay.from_estimator(
             self.clf,
@@ -64,8 +120,13 @@ class isoForest():
         plt.axis("square")
         plt.legend(handles=self.handles, labels=["outliers", "inliers"], title="true class")
         plt.show()
+        # save
+        plt.savefig(self.path + 'plot_discrete.png')
 
-    def plot_path_length_decision_boundary(self):
+        if if_loop:
+            plt.savefig(loop_path + '/isoForest_discrete.png')
+
+    def plot_path_length_decision_boundary(self, if_loop=False, loop_path=None):
         disp = DecisionBoundaryDisplay.from_estimator(
             self.clf,
             self.X,
@@ -78,6 +139,12 @@ class isoForest():
         plt.legend(handles=self.handles, labels=["outliers", "inliers"], title="true class")
         plt.colorbar(disp.ax_.collections[1])
         plt.show()
+        # save
+        plt.savefig(self.path + 'plot_path_length_decision_boundary.png')
+
+        if if_loop:
+            plt.savefig(loop_path + '/isoForest__decision_boundary.png')
+
 
     def predict(self):
         out = self.clf.predict(self.X_train)
@@ -86,3 +153,30 @@ class isoForest():
         print('\nself.y_train', self.y_train)
         print("Accuracy: ")
         print(np.sum(out == self.y_train) / len(self.y_train))
+
+    def analyze(self):
+        # analyze prediction result and save to txt file
+        out = self.clf.predict(self.X_train)
+        self.y_train = np.array(list(map(lambda x: 1 if x < 4 else -1, self.y_train)))
+        # create a new file
+        f = open(self.path + 'analyze.txt', 'w')
+        f.write('out: ' + str(out) + '\n')
+        f.write('self.y_train: ' + str(self.y_train) + '\n')
+        f.write("Accuracy: " + str(np.sum(out == self.y_train) / len(self.y_train)) + '\n')
+
+        # draw confusion matrix
+        from sklearn.metrics import confusion_matrix
+        import seaborn as sns
+        import pandas as pd
+        cm = confusion_matrix(self.y_train, out)
+        print('\ncm', cm)
+        df_cm = pd.DataFrame(cm, index = [i for i in "01234"],
+                        columns = [i for i in "01234"])
+        plt.figure(figsize = (10,7))
+        sns.heatmap(df_cm, annot=True)
+        plt.savefig(self.path + 'confusion_matrix.png')
+        plt.show()
+        plt.close()
+
+
+

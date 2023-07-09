@@ -11,7 +11,7 @@ mpl.use('TkAgg')
 
 def isolation_forest_model(X, y, name, rng=9):
     rng = np.random.RandomState(rng)
-    # get train data, and test data
+    # get train data_reference, and validation data_reference
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
     # random generate outliers
     X_outliers = rng.uniform(low=-1, high=1, size=(50, 2))
@@ -52,7 +52,7 @@ def isolation_forest_model(X, y, name, rng=9):
 
 # rng = np.random.RandomState(42)
 #
-# # Generate train data
+# # Generate train data_reference
 # X = 0.3 * rng.randn(100, 2)
 # X_train = np.r_[X + 1, X - 3, X - 5, X + 6]
 # # Generate some regular novel observations

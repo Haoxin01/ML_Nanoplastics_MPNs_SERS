@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 def whole_peak_visualization(peak_df, name):
     """
-    Visualize the whole peak data, every column is a line except the first column.
+    Visualize the whole peak data_reference, every column is a line except the first column.
     """
     # drop the first column
     peak_df = peak_df.drop(peak_df.columns[0], axis=1)
@@ -18,17 +18,17 @@ def whole_peak_visualization(peak_df, name):
 
 
 if __name__ == '__main__':
-    peak_df = pd.read_csv('../data/test/undetected groups.csv', index_col=0)
+    peak_df = pd.read_csv('../../data_reference/original_data/undetected groups.csv', index_col=0)
     whole_peak_visualization(peak_df, 'unexpected_group_visualization')
 
-    peak_df = pd.read_csv('../data/test/PE.csv', index_col=0)
+    peak_df = pd.read_csv('../../data_reference/original_data/PE.csv', index_col=0)
     whole_peak_visualization(peak_df, 'PE_visualization')
 
-    peak_df = pd.read_csv('../data/test/PLA.csv', index_col=0)
+    peak_df = pd.read_csv('../../data_reference/original_data/PLA.csv', index_col=0)
     whole_peak_visualization(peak_df, 'PLA_visualization')
 
-    peak_df = pd.read_csv('../data/test/PMMA.csv', index_col=0)
+    peak_df = pd.read_csv('../../data_reference/original_data/PMMA.csv', index_col=0)
     whole_peak_visualization(peak_df, 'PMMA_visualization')
 
-    peak_df = pd.read_csv('../data/test/PS.csv', index_col=0)
+    peak_df = pd.read_csv('../../data_reference/original_data/PS.csv', index_col=0)
     whole_peak_visualization(peak_df, 'PS_visualization')

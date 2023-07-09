@@ -23,12 +23,12 @@ def correlation_heatmap(df):
     fig.savefig('./result/EDA/correlation_heatmap_UD.png')
 
 
-df = pd.read_csv('../data/test/undetected groups.csv', index_col=0)
+df = pd.read_csv('../../data_reference/original_data/undetected groups.csv', index_col=0)
 
-# See the first 5 rows of the data
+# See the first 5 rows of the data_reference
 print(df.head())
 
-# Get a summary of the data
+# Get a summary of the data_reference
 print(df.info())
 
 # Get basic statistics

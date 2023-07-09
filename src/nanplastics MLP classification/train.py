@@ -25,9 +25,9 @@ def build_dataloader(X, y, batch_size, shuffle, if_drop_last):
     X_df = (X_df - X_df.mean()) / X_df.std()
     # concat X and y
     data_df = pd.concat([X_df, y_df], axis=1)
-    # convert data to numpy array
+    # convert data_reference to numpy array
     data = data_df.to_numpy()
-    # split data into X and y
+    # split data_reference into X and y
     X = data[:, :-1]
     y = data[:, -1]
     # convert X and y to tensor
@@ -39,13 +39,13 @@ def build_dataloader(X, y, batch_size, shuffle, if_drop_last):
     return dataloader
 
 
-# prepare data
+# prepare data_reference
 source_data_dir = 'sample_data'
 data = batch_data_decoder(source_data_dir)
 X, y = data_concat(data, if_shuffle=True, shuffle_seed=0)
 label_map = {0: 'PE', 1: 'PMMA', 2: 'PS', 3: 'PLA', 4: 'UD'}
 
-print('\n-----------Finished data preparation-----------\n')
+print('\n-----------Finished data_reference preparation-----------\n')
 
 # build dataloader
 train_loader = build_dataloader(X, y, batch_size=32, shuffle=True, if_drop_last=True)
