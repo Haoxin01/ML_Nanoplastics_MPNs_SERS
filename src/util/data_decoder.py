@@ -91,27 +91,39 @@ def data_input(addr):
     return data
 
 
+def find_peak_in_range(data, start, end):
+    peaks = []
+    for i in range(1, len(data) - 1):
+        x, y = data[i]
+        _, y_prev = data[i - 1]
+        _, y_next = data[i + 1]
+
+        if start <= x <= end and y_prev < y > y_next:
+            peaks.append((x, y))
+
+    return max(peaks, key=lambda item: item[1]) if peaks else None
+
+
 def return_feature_dict(data):
     dict = {}
     # return the number of column in data
     sample_num = data.shape[1] - 1
     feature_loc = [811.69, 869.87, 998.37, 1295.78]
-    # feature_loc = [551.15, 811.69, 869.87, 998.37, 1134.67, 1295.78, 1451.36, 1468.78, 1541.88, 1600.84]
+    feature_ranges = [(806, 816), (864, 874), (993, 1003), (1290, 1300)]
+
     for i in range(sample_num):
         key = data.columns[i + 1]
         dict[key] = []
-        # TODO: need to be optimized
-        for item in feature_loc:
-            # print('processing feature: ', item, '...')
-            # if str(item) in data['wavenumber'].values:
-            if item in data['wavenumber'].values:
-                for j in range(len(data['wavenumber'])):
-                    # if data.iloc[j, 0] == str(item):
-                    if data.iloc[j, 0] == item:
-                        dict[key].append(float(data.iloc[j, i + 1]))
+
+        for j, feature in enumerate(feature_loc):
+            start, end = feature_ranges[j]
+            peak = find_peak_in_range(data, start, end)
+
+            if peak is not None:
+                dict[key].append(peak[1])
             else:
-                print('Error: feature is not in the wavenumber list.')
-                exit(-1)
+                dict[key].append(0)
+
     return dict
 
 def shuffle(dict_data, random_state):

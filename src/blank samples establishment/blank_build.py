@@ -20,10 +20,10 @@ def generate_parabolas(peak_intensities_range, num_parabolas_per_line, x, num_li
     return lines
 
 # Generate 60 lines with multiple small inverted parabolas
-small_parabolas_lines = generate_parabolas((0, 50), 5, x, 20)
+small_parabolas_lines = generate_parabolas((0, 100), 5, x, 20)
 
 # Generate 60 lines each with a large inverted parabola
-large_parabolas_lines = generate_parabolas((100, 1000), 1, x, 20)
+large_parabolas_lines = generate_parabolas((100, 60000), 1, x, 20)
 
 # Combine small parabolas lines and large parabolas lines into one dataset
 data = np.concatenate((small_parabolas_lines, large_parabolas_lines))
