@@ -99,3 +99,7 @@ def pca(X, y, n_components, ie):
 
     return X_pca
 
+
+def pca_mixture():
+    pass
+

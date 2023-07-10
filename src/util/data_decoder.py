@@ -56,15 +56,100 @@ def data_concat(data, if_shuffle: bool, shuffle_seed):
     return X, y, Xe, ye
 
 
+def data_concat_mixture(data, if_shuffle: bool, shuffle_seed: int, mixture_type: str):
+    X = []
+    y = []
+    concat_data = {}
+    for item in data:
+        if mixture_type == 'PS_PMMA':
+            if item in ['PS_PMMA_augmented', 'PS_augmented', 'PMMA_augmented']:
+                print('processing PS_PMMA-related Type: ', item, '...')
+                for key in data[item]:
+                    concat_data[key] = data[item][key]
+        elif mixture_type == 'PS_PLA':
+            if item in ['PS_PLA_augmented', 'PS_augmented', 'PLA_augmented']:
+                print('processing PS_PLA-related Type: ', item, '...')
+                for key in data[item]:
+                    concat_data[key] = data[item][key]
+        elif mixture_type == 'PS_PE':
+            if item in ['PS_PE_augmented', 'PS_augmented', 'PE_augmented']:
+                print('processing PS_PE-related Type: ', item, '...')
+                for key in data[item]:
+                    concat_data[key] = data[item][key]
+        else:
+            print('Error: mixture_type is not in the mixture_type list, please check ')
+            exit(-1)
+
+    # print('concat_data', concat_data)
+
+    print('shuffling concat_data with seed: ', shuffle_seed, '...')
+    if if_shuffle:
+        concat_data = shuffle_with_seed(concat_data, random_state=shuffle_seed)
+
+    print('divide concat_data into X and y...')
+    for key in concat_data:
+        X.append(concat_data[key])
+        if mixture_type == 'PS_PMMA':
+            y.append(label_identifier_PS_PMMA(key))
+        elif mixture_type == 'PS_PLA':
+            y.append(label_identifier_PS_PLA(key))
+        elif mixture_type == 'PS_PE':
+            y.append(label_identifier_PS_PE(key))
+        else:
+            print('Error: mixture_type is not in the mixture_type list, please check ')
+            exit(-1)
+
+    print('normalizing X...')
+    X = norm(X)
+
+    return X, y
+
+
+def label_identifier_PS_PE(label):
+    if 'PS_PE' in label:
+        return 0
+    elif 'PE' in label:
+        return 1
+    elif 'PS' in label:
+        return 2
+    else:
+        print('Error: label is not in the label list, please check '
+              'if the name of the csv files includes the following labels: '
+              'PE, PS, UD (undetected group).')
+        exit(-1)
+
+
+def label_identifier_PS_PLA(label):
+    if 'PS_PLA' in label:
+        return 0
+    elif 'PLA' in label:
+        return 1
+    elif 'PS' in label:
+        return 2
+    else:
+        print('Error: label is not in the label list, please check '
+              'if the name of the csv files includes the following labels: '
+              'PLA, PS, UD (undetected group).')
+        exit(-1)
+
+
+def label_identifier_PS_PMMA(label):
+    if 'PS_PMMA' in label:
+        return 0
+    elif 'PMMA' in label:
+        return 1
+    elif 'PS' in label:
+        return 2
+    else:
+        print('Error: label is not in the label list, please check '
+              'if the name of the csv files includes the following labels: '
+              'PMMA, PS, UD (undetected group).')
+        exit(-1)
+
+
 def label_identifier(label):
     if 'UD' in label:
         return 4
-    # elif 'PS_PMMA' in label:
-    #     return 6
-    # elif 'PS_PLA' in label:
-    #     return 5
-    # elif 'PS_PE' in label:
-    #     return 4
     elif 'PE' in label:
         return 0
     elif 'PLA' in label:
@@ -138,6 +223,24 @@ def return_feature_dict(data):
         #         exit(-1)
     return dict
 
+
+def mixture_data_decoder(X, mixture_type):
+    if mixture_type == 'PS_PMMA':
+        # only need first two columns from a 2D list
+        X = [[sub_list[0], sub_list[1]] for sub_list in X]
+    elif mixture_type == 'PS_PLA':
+        # need first and third columns from a 2D list, not a numpy array
+        X = [[sub_list[0], sub_list[2]] for sub_list in X]
+    elif mixture_type == 'PS_PE':
+        # need first and fourth columns
+        X = [[sub_list[0], sub_list[3]] for sub_list in X]
+    else:
+        print('Error: mixture type is not in the mixture type list, please check ')
+        exit(-1)
+    return X
+
+
+
 def shuffle(dict_data, random_state):
     """
     This function is used to shuffle a dict.
@@ -162,11 +265,3 @@ def shuffle_with_seed(dict_data, random_state):
     # Create new dictionary from shuffled list
     shuffled_dict = dict(items)
     return shuffled_dict
-
-
-def loop_csv(addr):
-    """
-    This function is used to loop csv files in a directory.
-    """
-
-    pass
