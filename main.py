@@ -35,22 +35,21 @@ def prediction():
     # batch process all files and return X and y with shuffling
     # if cache exist, load from cache; else, process data_reference and store to cache
     cache_dir = 'result/cache'
-    if not os.path.exists(cache_dir):
-        os.makedirs(cache_dir+'/model')
+    if not os.path.exists(cache_dir+'/variable'):
         os.makedirs(cache_dir+'/variable')
         data = batch_data_decoder(data_addr)
         X, y, Xe, ye = data_concat(data, if_shuffle=True, shuffle_seed=0)
         # store X, y and Xe, ye to Cache
-        np.save(cache_dir + '/X.npy', X)
-        np.save(cache_dir + '/y.npy', y)
-        np.save(cache_dir + '/Xe.npy', Xe)
-        np.save(cache_dir + '/ye.npy', ye)
+        np.save(cache_dir + '/variable/X.npy', X)
+        np.save(cache_dir + '/variable/y.npy', y)
+        np.save(cache_dir + '/variable/Xe.npy', Xe)
+        np.save(cache_dir + '/variable/ye.npy', ye)
     else:
         print('loading data_reference from cache...')
-        X = np.load(cache_dir + '/X.npy')
-        y = np.load(cache_dir + '/y.npy')
-        Xe = np.load(cache_dir + '/Xe.npy')
-        ye = np.load(cache_dir + '/ye.npy')
+        X = np.load(cache_dir + '/variable/X.npy')
+        y = np.load(cache_dir + '/variable/y.npy')
+        Xe = np.load(cache_dir + '/variable/Xe.npy')
+        ye = np.load(cache_dir + '/variable/ye.npy')
 
     # Env setting and data_reference loading END ------------------------------------------
     model_cache_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model'
@@ -58,18 +57,18 @@ def prediction():
 
     # Dimension reduction START -----------------------------------------------------
     # PCA dimension reduction
-    print('PCA dimension reduction for data_reference including undetected data_reference...')
+    # print('PCA dimension reduction for data_reference including undetected data_reference...')
     X_pca = pca(X, y, 2, 'all')
-    np.save(variable_cache_path + '/X_pca.npy', X_pca)
-    print('PCA dimension reduction for data_reference excluding undetected data_reference...')
+    # np.save(variable_cache_path + '/X_pca.npy', X_pca)
+    # print('PCA dimension reduction for data_reference excluding undetected data_reference...')
     Xe_pca = pca(Xe, ye, 2, 'UD_excluded')
-    np.save(variable_cache_path + '/Xe_pca.npy', Xe_pca)
+    # np.save(variable_cache_path + '/Xe_pca.npy', Xe_pca)
 
     # t-SNE dimension reduction
-    # print('t-SNE dimension reduction for data_reference including undetected data_reference...')
-    # X_tsne = tsne_implementation_all(X, y, 2)
-    # print('t-SNE dimension reduction for data_reference excluding undetected data_reference...')
-    # Xe_tsne = tsne_implementation_udexcluded(Xe, ye, 2)
+    print('t-SNE dimension reduction for data_reference including undetected data_reference...')
+    X_tsne = tsne_implementation_all(X_pca, y, 2)
+    print('t-SNE dimension reduction for data_reference excluding undetected data_reference...')
+    Xe_tsne = tsne_implementation_udexcluded(Xe_pca, ye, 2)
 
     # LDA dimension reduction
     # print('LDA dimension reduction for data_reference including undetected data_reference...')
@@ -94,11 +93,12 @@ def prediction():
     labels = ['PE', 'PLA', 'PMMA', 'PS']
 
     # Support Vector Machine
-    # search_best_model(Xe_pca, ye, svm_model, labels, model_cache_path, variable_cache_path)
+    model_param = {'kernel': 'rbf', 'C': 1, 'gamma': 0.1}
+    search_best_model(Xe_tsne, ye, svm_model, model_param, labels, model_cache_path, variable_cache_path)
 
     # K nearest neighbors
     knn_best_param = knn_grid_search(Xe_pca, ye)
-    search_best_model(Xe_pca, ye, knn_model, knn_best_param, labels, model_cache_path, variable_cache_path)
+    search_best_model(Xe_tsne, ye, knn_model, knn_best_param, labels, model_cache_path, variable_cache_path)
 
     # random forest, this use the dimension reduced data_reference
     search_best_model(Xe_pca, ye, rf_model, labels, model_cache_path, variable_cache_path)

@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from sklearn.ensemble import IsolationForest
 from sklearn.inspection import DecisionBoundaryDisplay
+from sklearn.model_selection import cross_val_score
 
 class isoForest():
     def __init__(self, X_pca, y, result_path):
@@ -25,7 +26,7 @@ class isoForest():
         self.preprocess_vis()
 
     def data_split(self):
-        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.05, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.05)
         self.X_train = X_train
         self.X_test = X_test
         self.y_train = y_train
@@ -44,6 +45,8 @@ class isoForest():
         self.handles = handles
         plt.axis("square")
         plt.legend(handles=handles, labels=["outliers", "inliers"], title="true class")
+        # font
+        # plt.rcParams['font.sans-serif'] = ['times new roman']
         plt.title("Undetected as outliers")
         plt.show()
         # save
@@ -64,23 +67,28 @@ class isoForest():
     def find_best_params(self):
         accuracy = 0
         self.y_test = np.array(list(map(lambda x: 1 if x < 4 else -1, self.y_test)))
+        self.y = np.array(list(map(lambda x: 1 if x < 4 else -1, self.y)))
+
         # number of -1 in y_test
-        minus1 = np.sum(self.y_train == -1)
+        minus1 = np.sum(self.y == -1)
         # number of 1 in y_test
-        plus1 = np.sum(self.y_train == 1)
+        plus1 = np.sum(self.y == 1)
         contamination = minus1 / (minus1 + plus1)
+
+        acc_list = []
         for seed in range(1000):
             clf = IsolationForest(
-                n_estimators=80,
+                n_estimators=100,
                 contamination=contamination,
-                random_state=seed,
                 max_samples='auto',
                 max_features=2,
-                bootstrap=True
-            ).fit(self.X_train)
-            out = clf.predict(self.X_test)
+                bootstrap=False
+            ).fit(self.X)
+            X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.2)
+            out = clf.predict(X_test)
 
-            caccuracy = np.sum(out == self.y_test) / len(self.y_test)
+            caccuracy = np.sum(out == y_test) / len(y_test)
+            acc_list.append(caccuracy)
             if caccuracy > accuracy:
                 accuracy = caccuracy
                 self.clf = clf
@@ -106,6 +114,9 @@ class isoForest():
                 print('Current max accuracy', accuracy)
                 print('with seed', seed, '\n')
 
+        print('average accuracy', np.mean(acc_list))
+
+
 
     def plot_discrete(self, if_loop=False, loop_path=None):
         X = self.vis_X
@@ -113,12 +124,15 @@ class isoForest():
             self.clf,
             X,
             response_method="predict",
-            alpha=0.5,
+            alpha=0.4,
         )
         disp.ax_.scatter(X[:, 0], X[:, 1], c=self.vis_y, s=20, edgecolor="k")
         disp.ax_.set_title("Binary decision boundary \nof IsolationForest")
         plt.axis("square")
         plt.legend(handles=self.handles, labels=["outliers", "inliers"], title="true class")
+        # font
+        plt.rcParams['font.sans-serif'] = ['times new roman']
+        plt.rcParams['font.size'] = 16
         plt.show()
         # save
         plt.savefig(self.path + 'plot_discrete.png')
@@ -138,6 +152,12 @@ class isoForest():
         plt.axis("square")
         plt.legend(handles=self.handles, labels=["outliers", "inliers"], title="true class")
         plt.colorbar(disp.ax_.collections[1])
+        # font
+        plt.rcParams['font.sans-serif'] = ['times new roman']
+        # font size
+        plt.rcParams.update({'font.size': 15})
+        # cmap
+        # plt.rcParams['image.cmap'] = ''
         plt.show()
         # save
         plt.savefig(self.path + 'plot_path_length_decision_boundary.png')
