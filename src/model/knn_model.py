@@ -10,14 +10,14 @@ from sklearn.neighbors import KNeighborsClassifier
 
 
 def knn_model(X, y, seed):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=seed)
 
     clf = KNeighborsClassifier(n_neighbors=3)
     clf.fit(X_train, y_train)
 
     y_pred = clf.predict(X_test)
-    # print("\nKNN Accuracy: ")
-    # print(accuracy_score(y_test, y_pred))
+    print("\nKNN Accuracy: ")
+    print(accuracy_score(y_test, y_pred))
 
     # # decision boundary plot
     # h = .02  # step size in the mesh

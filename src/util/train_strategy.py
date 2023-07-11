@@ -5,12 +5,11 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC
 
-def cross_validation(Xe_pca, ye, model, labels, model_cache_path, variable_cache_path):
-    socres = cross_val_score(SVC(kernel='linear'), Xe_pca, ye, cv=8)
+def cross_validation(Xe_pca, ye, model):
+    socres = cross_val_score(model, Xe_pca, ye, cv=8)
     print(f"Cross validation scores: {socres}")
     print(f"Average cross validation score: {np.mean(socres)}")
     print()
-
 
 
 def search_best_model(Xe_pca, ye, model, model_param, labels, model_cache_path, variable_cache_path):
@@ -31,6 +30,7 @@ def search_best_model(Xe_pca, ye, model, model_param, labels, model_cache_path, 
             # model_save(svm_clf, f"svm_model_{best_seed}.pkl")
     avg_acc = np.mean(acc_list)
     print(f"Average accuracy: {avg_acc}")
+
 
 def compute_metrics(true, pred):
     accuracy = accuracy_score(true, pred)
