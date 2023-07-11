@@ -4,6 +4,7 @@ import sys
 
 import numpy as np
 from sklearn.decomposition import IncrementalPCA, PCA
+from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, confusion_matrix
 from src.model.iforest_mdoel import isoForest
 from src.model.knn_model import knn_model, knn_grid_search
 from src.model.lda_model import lda_all, lda_udexcluded
@@ -25,6 +26,7 @@ from src.util.data_decoder import (
 from src.util.feature_engineering import norm, select_best_num_features
 from src.util.result_saver import build_result_dir
 from src.util.train_strategy import search_best_model
+from src.util.train_strategy import create_confusion_matrix, plot_confusion_matrix
 
 
 def prediction():
@@ -133,11 +135,11 @@ def prediction_mixture():
         os.makedirs(variable_cache_path+'/PS_PE')
         data = batch_data_decoder(data_addr)
         X_ps_pe, y_ps_pe = data_concat_mixture(data, if_shuffle=True, shuffle_seed=0, mixture_type='PS_PE')
-        X_ps_pe = mixture_data_decoder(X_ps_pe, 'PS_PE')
+        # X_ps_pe = mixture_data_decoder(X_ps_pe, 'PS_PE')
         X_ps_pla, y_ps_pla = data_concat_mixture(data, if_shuffle=True, shuffle_seed=0, mixture_type='PS_PLA')
-        X_ps_pla = mixture_data_decoder(X_ps_pla, 'PS_PLA')
+        # X_ps_pla = mixture_data_decoder(X_ps_pla, 'PS_PLA')
         X_ps_pmma, y_ps_pmma = data_concat_mixture(data, if_shuffle=True, shuffle_seed=0, mixture_type='PS_PMMA')
-        X_ps_pmma = mixture_data_decoder(X_ps_pmma, 'PS_PMMA')
+        # X_ps_pmma = mixture_data_decoder(X_ps_pmma, 'PS_PMMA')
         np.save(variable_cache_path+'/PS_PMMA/X_ps_pmma.npy', X_ps_pmma)
         np.save(variable_cache_path+'/PS_PMMA/y_ps_pmma.npy', y_ps_pmma)
         np.save(variable_cache_path+'/PS_PLA/X_ps_pla.npy', X_ps_pla)
@@ -158,6 +160,7 @@ def prediction_mixture():
     # [1000.22, 809.73, 871.79, 1297.47]
     # PS, PMMA, PLA, PE
     # T-SNE dimension reduction START -----------------------------------------------
+    ####################
     X_tsne_ps_pmma = tsne_mixture(X_ps_pmma, y_ps_pmma, n_components=2, mixture_type='PS_PMMA')
     X_tsne_ps_pla = tsne_mixture(X_ps_pla, y_ps_pla, n_components=2, mixture_type='PS_PLA')
     X_tsne_ps_pe = tsne_mixture(X_ps_pe, y_ps_pe, n_components=2, mixture_type='PS_PE')
@@ -165,11 +168,36 @@ def prediction_mixture():
     # T-SNE dimension reduction END -------------------------------------------------
 
     ## PS+PMMA, PS, PMMA
+    # clf, y_test, y_pred = svm_model(X_tsne_ps_pe, y_ps_pe, 100)
+    # print('PS+PE, PS, PE')
+    # # confusion matrix
+    # cm = confusion_matrix(y_test, y_pred)
+    # print(cm)
+
+    clf, y_test, y_pred = knn_model(X_tsne_ps_pe, y_ps_pe, 100)
+    # confusion matrix
+    cm = create_confusion_matrix(y_test, y_pred)
+    plot_confusion_matrix(cm, ['PS+PE', 'PS', 'PE'])
+    print(cm)
 
     ## PS+PLA, PS, PLA
+    clf, y_test, y_pred = knn_model(X_tsne_ps_pla, y_ps_pla, 100)
+    # confusion matrix
+    cm = create_confusion_matrix(y_test, y_pred)
+    plot_confusion_matrix(cm, ['PS+PE', 'PS', 'PE'])
+    print(cm)
 
     ## PS+PE, PS, PE
+    clf, y_test, y_pred = knn_model(X_tsne_ps_pmma, y_ps_pmma, 100)
+    # confusion matrix
+    cm = create_confusion_matrix(y_test, y_pred)
+    plot_confusion_matrix(cm, ['PS+PE', 'PS', 'PE'])
+    print(cm)
 
+
+def cross_validation():
+    path = ''
+    pass
 
 
 if __name__ == '__main__':
@@ -178,3 +206,4 @@ if __name__ == '__main__':
 
     # classification for mixed kinds of plastics
     prediction_mixture()
+
