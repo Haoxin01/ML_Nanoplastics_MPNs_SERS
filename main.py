@@ -28,9 +28,9 @@ from src.util.train_strategy import search_best_model
 def prediction():
     # Env setting and data_reference loading START ----------------------------------------
     # set data_reference directory
-    data_addr = '/Users/shiyujiang/Desktop/Nanoplastics-ML/data/sample_data_augmented'
-    mixture_addr = '/Users/shiyujiang/Desktop/Nanoplastics-ML/data/mixture_data_augmented'
-    result_addr = '/Users/shiyujiang/Desktop/Nanoplastics-ML/result'
+    data_addr = 'D:/Nanoplastics-ML/data/sample_data_augmented'
+    mixture_addr = 'D:/Nanoplastics-ML/data/mixture_data_augmented'
+    result_addr = 'D:/Nanoplastics-ML/result'
 
     # batch process all files and return X and y with shuffling
     # if cache exist, load from cache; else, process data_reference and store to cache
@@ -53,8 +53,8 @@ def prediction():
         ye = np.load(cache_dir + '/ye.npy')
 
     # Env setting and data_reference loading END ------------------------------------------
-    model_cache_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model'
-    variable_cache_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/variable/non_mixture'
+    model_cache_path = 'D:/Nanoplastics-ML/validation/cache/model'
+    variable_cache_path = 'D:/Nanoplastics-ML/validation/cache/variable/non_mixture'
 
     # Dimension reduction START -----------------------------------------------------
     # PCA dimension reduction
@@ -80,37 +80,37 @@ def prediction():
 
     # Outliner detection START -------------------------------------------------
     # isoforest model
-    # isf_model = isoForest(X_pca, y, result_addr)
-    # isf_model.pre_visualization()
-    # isf_model.train()
-    # isf_model.plot_discrete()
-    # isf_model.plot_path_length_decision_boundary()
-    # isf_model.predict()
-    # isf_model.find_best_params()
+    isf_model = isoForest(X_pca, y, result_addr)
+    isf_model.pre_visualization()
+    isf_model.train()
+    isf_model.plot_discrete()
+    isf_model.plot_path_length_decision_boundary()
+    isf_model.predict()
+    isf_model.find_best_params()
     # Outliner detection END ---------------------------------------------------
 
-    # Nonaplastics classification START ----------------------------------------
-    # list of your labels
-    labels = ['PE', 'PLA', 'PMMA', 'PS']
-
-    # Support Vector Machine
-    # search_best_model(Xe_pca, ye, svm_model, labels, model_cache_path, variable_cache_path)
-
-    # K nearest neighbors
-    knn_best_param = knn_grid_search(Xe_pca, ye)
-    search_best_model(Xe_pca, ye, knn_model, knn_best_param, labels, model_cache_path, variable_cache_path)
-
-    # random forest, this use the dimension reduced data_reference
-    search_best_model(Xe_pca, ye, rf_model, labels, model_cache_path, variable_cache_path)
-
-    # non-dimensional reduced data_reference with random forest
-    search_best_model(Xe, ye, rf_model, labels, model_cache_path, variable_cache_path)
-
-    # hierarchical clustering
-    search_best_model(Xe_pca, ye, hpa_model, labels, model_cache_path, variable_cache_path)
-
-    # ensemble model: voting classifier of SVM, KNN and RF
-    search_best_model(Xe_pca, ye, ensemble_model, labels, model_cache_path, variable_cache_path)
+    # # Nonaplastics classification START ----------------------------------------
+    # # list of your labels
+    # labels = ['PE', 'PLA', 'PMMA', 'PS']
+    #
+    # # Support Vector Machine
+    # # search_best_model(Xe_pca, ye, svm_model, labels, model_cache_path, variable_cache_path)
+    #
+    # # K nearest neighbors
+    # knn_best_param = knn_grid_search(Xe_pca, ye)
+    # search_best_model(Xe_pca, ye, knn_model, knn_best_param, labels, model_cache_path, variable_cache_path)
+    #
+    # # random forest, this use the dimension reduced data_reference
+    # search_best_model(Xe_pca, ye, rf_model, labels, model_cache_path, variable_cache_path)
+    #
+    # # non-dimensional reduced data_reference with random forest
+    # search_best_model(Xe, ye, rf_model, labels, model_cache_path, variable_cache_path)
+    #
+    # # hierarchical clustering
+    # search_best_model(Xe_pca, ye, hpa_model, labels, model_cache_path, variable_cache_path)
+    #
+    # # ensemble model: voting classifier of SVM, KNN and RF
+    # search_best_model(Xe_pca, ye, ensemble_model, labels, model_cache_path, variable_cache_path)
 
     print('Finished!')
     # Nonaplastics classification END ------------------------------------------
