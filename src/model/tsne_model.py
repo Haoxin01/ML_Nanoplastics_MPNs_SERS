@@ -4,10 +4,20 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 import warnings
 import numpy as np
+import matplotlib as mpl
+import seaborn as sns
 # import matplotlib
 # matplotlib.use('TkAgg')
 
+# Set global matplotlib parameters
+mpl.rcParams['font.family'] = 'serif'
+mpl.rcParams['font.serif'] = ['Times New Roman']
+mpl.rcParams['font.size'] = 22
+
 def tsne_implementation_all(data, labels, n_components=2):
+    # Convert your data to a numpy array if it's not already
+    data = np.array(data)
+
     result_dir = 'result/tsne'
     X_embedded = TSNE(n_components=n_components,
                       perplexity=70,
@@ -19,8 +29,8 @@ def tsne_implementation_all(data, labels, n_components=2):
     # save
     tsneDf.to_csv(result_dir + '/all_tsne_to2d.csv', index=False)
     # use X_embedded and labels to plot
-    colors = ["navy", "turquoise", "darkorange", "red", "green"]
-    plt.figure(figsize=(9, 9))
+    colors = sns.color_palette("Set2", 5)
+    plt.figure(figsize=(10, 10))
     for color, i, target_name in zip(colors, [0, 1, 2, 3, 4],
                                         ['PE', 'PLA', 'PMMA', 'PS', 'UD']):
         plt.scatter(
@@ -30,10 +40,16 @@ def tsne_implementation_all(data, labels, n_components=2):
             lw=2,
             label=target_name,
         )
-    plt.title("t-SNE of Nano-plastic dataset")
-    plt.legend(loc="best", shadow=False, scatterpoints=1)
-    plt.axis([-70, 70, -70, 70])
-    # save
+
+    plt.xticks(fontsize=24)
+    plt.yticks(fontsize=24)
+    plt.xlabel("First Principal Component", fontsize=24, weight='bold')
+    plt.ylabel("Second Principal Component", fontsize=24, weight='bold')
+    plt.title("t-SNE of Nano-plastic dataset", fontsize=24, weight='bold')
+    plt.legend(loc="upper right", shadow=False, scatterpoints=1, fontsize=22)
+    plt.xlim([-50, 50])
+    plt.ylim([-50, 50])
+
     plt.savefig(result_dir + '/all_tsne_to2d.png')
     plt.close()
 
@@ -64,6 +80,9 @@ def tsne_implementation_all(data, labels, n_components=2):
     return X_embedded
 
 def tsne_implementation_udexcluded(data, labels, n_components=2):
+    # Convert your data to a numpy array if it's not already
+    data = np.array(data)
+
     result_dir = 'result/tsne'
     X_embedded = TSNE(n_components=n_components,
                       perplexity=70,
@@ -152,6 +171,9 @@ def tsne_implementation_udexcluded(data, labels, n_components=2):
 
 
 def tsne_mixture(data, labels, n_components: int, mixture_type: str):
+    # Convert your data to a numpy array if it's not already
+    data = np.array(data)
+
     X_embedded = TSNE(n_components=n_components,
                       perplexity=10,
                       learning_rate=10,
@@ -160,10 +182,10 @@ def tsne_mixture(data, labels, n_components: int, mixture_type: str):
     # add label to tsneDf
     tsneDf['label'] = labels
     # use X_embedded and labels to plot
-    colors = ["navy", "turquoise", "darkorange"]
-    plt.figure(figsize=(9, 9))
+    colors = sns.color_palette("Set2", 5)  # Use the same color palette
+    plt.figure(figsize=(10, 10))
     for color, i, target_name in zip(colors, [0, 1, 2],
-                                        ['Mixture', 'Mix1', 'Mix2']):
+                                     ['Mixture', 'Mix1', 'Mix2']):
         plt.scatter(
             X_embedded[labels == i, 0],
             X_embedded[labels == i, 1],
@@ -171,9 +193,15 @@ def tsne_mixture(data, labels, n_components: int, mixture_type: str):
             lw=2,
             label=target_name,
         )
-    plt.title("t-SNE of Nano-plastic mixture dataset")
-    plt.legend(loc="best", shadow=False, scatterpoints=1)
-    plt.axis([-70, 70, -70, 70])
+
+    plt.xticks(fontsize=24)
+    plt.yticks(fontsize=24)
+    plt.xlabel("First Principal Component", fontsize=24, weight='bold')
+    plt.ylabel("Second Principal Component", fontsize=24, weight='bold')
+    plt.title("t-SNE of Nano-plastic mixture dataset", fontsize=24, weight='bold')
+    plt.legend(loc="upper right", shadow=False, scatterpoints=1, fontsize=22)
+    plt.xlim([-70, 70])
+    plt.ylim([-70, 70])
     plt.show()
     plt.close()
 

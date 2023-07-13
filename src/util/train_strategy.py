@@ -49,9 +49,10 @@ def plot_confusion_matrix(cm, labels):
     plt.figure(figsize=(10, 7))
     sns.heatmap(cm, annot=True, fmt='.2%', xticklabels=labels, yticklabels=labels, cmap="YlGnBu")
     plt.title("Confusion Matrix")
-    plt.xlabel("Predicted Label")
-    plt.ylabel("True Label")
+    plt.xlabel("Predicted Label", weight='bold')
+    plt.ylabel("True Label", weight='bold')
     plt.show()
+
 
 def model_save(model, filename):
     import pickle

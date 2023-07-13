@@ -27,7 +27,7 @@ def isolation_forest_model(X, y, name, rng=9):
     Z = clf.decision_function(np.c_[xx.ravel(), yy.ravel()])
     Z = Z.reshape(xx.shape)
 
-    plt.title("IsolationForest "+name)
+    plt.title("IsolationForest " + name, fontname="Times New Roman")
     plt.contourf(xx, yy, Z, cmap=plt.cm.Blues_r)
 
     b1 = plt.scatter(X_train[:, 0], X_train[:, 1], c='white')
@@ -36,12 +36,14 @@ def isolation_forest_model(X, y, name, rng=9):
     plt.axis('tight')
     plt.xlim((-1, 1))
     plt.ylim((-1, 1))
+    plt.xticks(fontsize=14, fontweight='bold', fontname="Times New Roman")
+    plt.yticks(fontsize=14, fontweight='bold', fontname="Times New Roman")
     plt.legend([b1, b2, c],
-                ["training observations",
+               ["training observations",
                 "new regular observations", "new abnormal observations"],
-                loc="upper left")
+               loc="upper left", prop={'size': 15, 'family': 'Times New Roman'})
     # save
-    plt.savefig("src\\model\\isolation_forest_"+name+".png")
+    plt.savefig("src\\model\\isolation_forest_" + name + ".png")
 
     return clf
 

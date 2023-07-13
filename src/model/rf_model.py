@@ -5,43 +5,71 @@ from matplotlib import pyplot as plt
 from matplotlib.colors import ListedColormap
 import numpy as np
 import seaborn as sns
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
+import matplotlib as mpl
+from sklearn.model_selection import KFold
 
-def rf_model(X, y):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+# Set global matplotlib parameters
+mpl.rcParams['font.family'] = 'serif'
+mpl.rcParams['font.serif'] = ['Times New Roman']
+mpl.rcParams['font.size'] = 24
 
-    clf = RandomForestClassifier(n_estimators=100, max_depth=2, random_state=0)
-    clf.fit(X_train, y_train)
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
 
-    y_pred = clf.predict(X_test)
-    print("\nRandom Forest Accuracy: ")
-    print(accuracy_score(y_test, y_pred))
+def rf_model_cross_validation(X, y, seed, cv=5):
+    kf = KFold(n_splits=cv, random_state=seed, shuffle=True)
 
-    # decision boundary plot
-    h = .02  # step size in the mesh
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
-                         np.arange(y_min, y_max, h))
-    Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
-    Z = Z.reshape(xx.shape)
+    params = {'n_estimators': [100],
+              'max_depth': [1, 10, 20],
+              'min_samples_split': [2, 5, 10],
+              'min_samples_leaf': [1, 2, 4]}
+    grid_search = GridSearchCV(RandomForestClassifier(), params, cv=kf, verbose=0)
 
+    all_y_test = []
+    all_y_pred = []
+
+    for train_index, test_index in kf.split(X):
+        X_train, X_test = X[train_index], X[test_index]
+        y_train, y_test = y[train_index], y[test_index]
+
+        grid_search.fit(X_train, y_train)
+        clf = grid_search.best_estimator_
+        y_pred = clf.predict(X_test)
+
+        all_y_test.extend(y_test)
+        all_y_pred.extend(y_pred)
+
+    print("\nCross-validation RF Accuracy: ")
+    print(accuracy_score(all_y_test, all_y_pred))
+
+    # Train final model on all data with best parameters
+    clf.fit(X, y)
+    y_pred_all = clf.predict(X)
+
+    print("\nFinal RF Accuracy on all data: ")
+    print(accuracy_score(y, y_pred_all))
+
+    # Add your decision boundary plot and other visualizations here
+
+    # Create a list to store the errors for each tree in the forest
+    cumulative_errors = []
+
+    # Fit the model and calculate the error for each tree
+    for n_trees in range(1, clf.n_estimators + 1):
+        clf.set_params(n_estimators=n_trees)
+        clf.fit(X, y)
+        y_pred_all = clf.predict(X)
+        error = mean_squared_error(y, y_pred_all)
+        cumulative_errors.append(error)
+
+    # Plot the cumulative errors over the number of trees
     plt.figure(figsize=(10, 7))
-    sns.set(font_scale=1.6, style="whitegrid")
-    cmap = plt.cm.YlGnBu
-    plt.contourf(xx, yy, Z, cmap=cmap, alpha=0.8)
-    scatter = plt.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap, s=50, edgecolors='k')
-    plt.title('RF Decision Boundary', fontsize=28)
-    plt.xlabel('First Principal Component', fontsize=24)
-    plt.ylabel('Second Principal Component', fontsize=24)
-
-    # Define class labels and assign them to the legend
-    class_labels = ['PE', 'PS', 'PS_PE']
-    handles, _ = scatter.legend_elements()
-    legend1 = plt.legend(handles, class_labels, title="Classes", fontsize=22)
-    plt.setp(legend1.get_title(), fontsize='xx-large')
-
-    # Ensure the plot is displayed correctly with all labels visible
-    plt.tight_layout()
+    plt.plot(range(1, clf.n_estimators + 1), cumulative_errors, marker='o')
+    plt.xlabel('Number of Trees', fontsize=24, weight='bold')
+    plt.ylabel('Cumulative Error', fontsize=24, weight='bold')
+    plt.title('Random Forest Cumulative Errors over Number of Trees', fontsize=24, weight='bold')
     plt.show()
 
-    return clf, y_test, y_pred
+    return clf, all_y_test, all_y_pred
