@@ -30,7 +30,7 @@ from src.util.plot_categorical_correlation import plot_categorical_correlation
 from src.util.result_saver import build_result_dir
 from src.util.train_strategy import search_best_model
 from src.util.train_strategy import create_confusion_matrix, plot_confusion_matrix, compute_metrics
-
+from src.model.regression_model import RegressionModel
 
 def prediction():
     # Env setting and data_reference loading START ----------------------------------------
@@ -248,14 +248,20 @@ def prediction_mixture():
     print (accuracy, recall, precision, f1)
     print(cm)
 
+def regression():
+    plastics = ["PS", "PE", "PMMA", "PLA"]
 
+    for plastic in plastics:
+        model = RegressionModel(plastic)
+        model.fit_and_plot_all()
 
 
 
 if __name__ == '__main__':
     # outliner detection and classification for single kind of plastics
-     prediction()
+    #  prediction()
 
     # classification for mixed kinds of plastics
     #  prediction_mixture()
+    regression()
 
