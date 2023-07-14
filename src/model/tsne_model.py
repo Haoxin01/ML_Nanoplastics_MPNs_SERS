@@ -12,7 +12,7 @@ import seaborn as sns
 # Set global matplotlib parameters
 mpl.rcParams['font.family'] = 'serif'
 mpl.rcParams['font.serif'] = ['Times New Roman']
-mpl.rcParams['font.size'] = 22
+mpl.rcParams['font.size'] = 24
 
 def tsne_implementation_all(data, labels, n_components=2):
     # Convert your data to a numpy array if it's not already
@@ -41,12 +41,12 @@ def tsne_implementation_all(data, labels, n_components=2):
             label=target_name,
         )
 
-    plt.xticks(fontsize=24)
-    plt.yticks(fontsize=24)
-    plt.xlabel("First Principal Component", fontsize=24, weight='bold')
-    plt.ylabel("Second Principal Component", fontsize=24, weight='bold')
-    plt.title("t-SNE of Nano-plastic dataset", fontsize=24, weight='bold')
-    plt.legend(loc="upper right", shadow=False, scatterpoints=1, fontsize=22)
+    plt.xticks(fontsize=28)
+    plt.yticks(fontsize=28)
+    plt.xlabel("First Principal Component", fontsize=28, weight='bold')
+    plt.ylabel("Second Principal Component", fontsize=28, weight='bold')
+    plt.title("t-SNE of Nano-plastic dataset", fontsize=28, weight='bold')
+    plt.legend(loc="upper right", shadow=False, scatterpoints=1, fontsize=24)
     plt.xlim([-50, 50])
     plt.ylim([-50, 50])
 
@@ -86,18 +86,18 @@ def tsne_implementation_udexcluded(data, labels, n_components=2):
     result_dir = 'result/tsne'
     X_embedded = TSNE(n_components=n_components,
                       perplexity=70,
-                      learning_rate=10
+                      learning_rate=10,
                       ).fit_transform(data)
     tsneDf = pd.DataFrame(data=X_embedded, columns=['TSNE1', 'TSNE2'])
     # add label to tsneDf
     tsneDf['label'] = labels
     # save
-    tsneDf.to_csv(result_dir + '/udexcluded_tsne_to2d.csv', index=False)
+    tsneDf.to_csv(result_dir + '/all_tsne_to2d.csv', index=False)
     # use X_embedded and labels to plot
-    colors = ["navy", "turquoise", "darkorange", "red"]
-    plt.figure(figsize=(9, 9))
+    colors = sns.color_palette("Set2", 5)
+    plt.figure(figsize=(10, 10))
     for color, i, target_name in zip(colors, [0, 1, 2, 3],
-                                        ['PE', 'PLA', 'PMMA', 'PS']):
+                                     ['PE', 'PLA', 'PMMA', 'PS']):
         plt.scatter(
             X_embedded[labels == i, 0],
             X_embedded[labels == i, 1],
@@ -105,12 +105,18 @@ def tsne_implementation_udexcluded(data, labels, n_components=2):
             lw=2,
             label=target_name,
         )
-    plt.title("t-SNE of Nano-plastic dataset")
-    plt.legend(loc="best", shadow=False, scatterpoints=1)
-    plt.axis([-70, 70, -70, 70])
-    # save
+
+    plt.xticks(fontsize=28)
+    plt.yticks(fontsize=28)
+    plt.xlabel("First Principal Component", fontsize=28, weight='bold')
+    plt.ylabel("Second Principal Component", fontsize=28, weight='bold')
+    plt.title("t-SNE of Nano-plastic dataset", fontsize=28, weight='bold')
+    plt.legend(loc="upper right", shadow=False, scatterpoints=1, fontsize=24)
+    plt.xlim([-50, 50])
+    plt.ylim([-50, 50])
     plt.savefig(result_dir + '/udexcluded_tsne_to2d.png')
     plt.close()
+
     # record information
     with open(result_dir + '/udexcluded_tsne_to2d.txt', 'w') as f:
         # write
@@ -205,43 +211,6 @@ def tsne_mixture(data, labels, n_components: int, mixture_type: str):
     plt.show()
     plt.close()
 
-    # grid search
-    # # Set the possible values of perplexity and learning rate
-    # 5, 10, 15, 20, 25, 30, 50, 70
-    # perplexities = [5, 10, 15, 20, 25]
-    # learning_rates = [10, 100, 200, 500]
-    # grid_search_dir = 'result/tsne/mixture/grid_search/'
-    #
-    # # Apply grid search
-    # for perplexity in perplexities:
-    #     for learning_rate in learning_rates:
-    #         # Apply t-SNE with current parameter values
-    #         tsne = TSNE(n_components=2, perplexity=perplexity, learning_rate=learning_rate)
-    #         X_embedded = tsne.fit_transform(data)
-    #
-    #         # Plot the result
-    #         plt.figure(figsize=(9, 9))
-    #         colors = ["navy", "turquoise", "darkorange"]
-    #         for color, i, target_name in zip(colors, [0, 1, 2],
-    #                                          ['Mixture', 'Mix1', 'Mix2']):
-    #             plt.scatter(
-    #                 X_embedded[labels == i, 0],
-    #                 X_embedded[labels == i, 1],
-    #                 color=color,
-    #                 lw=2,
-    #                 label=target_name,
-    #             )
-    #         plt.title(f'Perplexity: {perplexity}, Learning Rate: {learning_rate}')
-    #         plt.legend(loc="best", shadow=False, scatterpoints=1)
-    #         plt.axis([-70, 70, -70, 70])
-    #         if mixture_type == "PS_PMMA":
-    #             plt.savefig(grid_search_dir+'PS_PMMA/' + f'/perplexity_{perplexity}_learning_rate_{learning_rate}.png')
-    #         elif mixture_type == "PS_PLA":
-    #             plt.savefig(grid_search_dir+'PS_PLA/' + f'/perplexity_{perplexity}_learning_rate_{learning_rate}.png')
-    #         elif mixture_type == "PS_PE":
-    #             plt.savefig(grid_search_dir+'PS_PE/' + f'/perplexity_{perplexity}_learning_rate_{learning_rate}.png')
-    #
-    #         plt.close()
 
 
     return X_embedded

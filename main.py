@@ -5,6 +5,8 @@ import sys
 import numpy as np
 from sklearn.decomposition import IncrementalPCA, PCA
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, confusion_matrix
+
+from src.model.hca_model import hca_model
 from src.model.iforest_mdoel import isoForest
 from src.model.knn_model import knn_model_cross_validation
 from src.model.lda_model import lda_all, lda_udexcluded
@@ -24,6 +26,7 @@ from src.util.data_decoder import (
     shuffle,
 )
 from src.util.feature_engineering import norm, select_best_num_features
+from src.util.plot_categorical_correlation import plot_categorical_correlation
 from src.util.result_saver import build_result_dir
 from src.util.train_strategy import search_best_model
 from src.util.train_strategy import create_confusion_matrix, plot_confusion_matrix, compute_metrics
@@ -59,8 +62,11 @@ def prediction():
     model_cache_path = 'D:/Nanoplastics-ML/validation/cache/model'
     variable_cache_path = 'D:/Nanoplastics-ML/validation/cache/variable/non_mixture'
 
+    # categorical_correlation
+    # plot_categorical_correlation(X, y)
+
     # # Feature selection START -------------------------------------------------
-    X_best = select_best_num_features(Xe, ye, score_func='mutual_info')
+    # X_best = select_best_num_features(Xe, ye, score_func='mutual_info')
 
     # # Feature selection end -------------------------------------------------
 
@@ -75,7 +81,7 @@ def prediction():
 
     # t-SNE dimension reduction
     print('t-SNE dimension reduction for data_reference including undetected data_reference...')
-    X_tsne = tsne_implementation_all(X, y, 2)
+    # X_tsne = tsne_implementation_all(X_pca, y, 2)
     print('t-SNE dimension reduction for data_reference excluding undetected data_reference...')
     Xe_tsne = tsne_implementation_udexcluded(Xe, ye, 2)
 
@@ -99,7 +105,7 @@ def prediction():
     # # Outliner detection END ---------------------------------------------------
 
     # Nonaplastics classification START ----------------------------------------
-    # Support Vector Machine
+    # # Support Vector Machine
     # clf, all_y_test, all_y_pred = svm_model_cross_validation(Xe_tsne, ye, 100)
     # # confusion matrix
     # cm = create_confusion_matrix(all_y_test, all_y_pred)
@@ -137,6 +143,15 @@ def prediction():
     # accuracy, recall, precision, f1 = compute_metrics(all_y_test, all_y_pred)
     # print (accuracy, recall, precision, f1)
     # print(cm)
+
+    #  hca model
+    clf, all_y_test, all_y_pred = hca_model(Xe_tsne, ye, n_clusters=4)
+    # confusion matrix
+    cm = create_confusion_matrix(all_y_test, all_y_pred)
+    plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
+    accuracy, recall, precision, f1 = compute_metrics(all_y_test, all_y_pred)
+    print (accuracy, recall, precision, f1)
+    print(cm)
 
     # ensemble model: voting classifier of SVM, KNN, RF and K-means
     # Ensemble Model

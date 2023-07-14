@@ -17,6 +17,7 @@ mpl.rcParams['font.size'] = 24
 
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
+import shap
 
 def rf_model_cross_validation(X, y, seed, cv=5):
     kf = KFold(n_splits=cv, random_state=seed, shuffle=True)
@@ -71,5 +72,17 @@ def rf_model_cross_validation(X, y, seed, cv=5):
     plt.ylabel('Cumulative Error', fontsize=24, weight='bold')
     plt.title('Random Forest Cumulative Errors over Number of Trees', fontsize=24, weight='bold')
     plt.show()
+
+    # Initialize JS for SHAP plots
+    shap.initjs()
+
+    # Create a Kernel SHAP explainer
+    explainer = shap.KernelExplainer(clf.predict, X_train)
+
+    # Calculate shap_values for all of X
+    shap_values = explainer.shap_values(X)
+
+    # Plot the SHAP values
+    shap.summary_plot(shap_values, X)
 
     return clf, all_y_test, all_y_pred

@@ -36,12 +36,12 @@ def pca(X, y, n_components, ie):
             )
 
             # Set x and y ticks and their font size
-            plt.xticks(np.linspace(-1, 1, 5), fontsize=24)
-            plt.yticks(np.linspace(-1, 1, 5), fontsize=24)
+            plt.xticks(np.linspace(-1, 1, 5), fontsize=28)
+            plt.yticks(np.linspace(-1, 1, 5), fontsize=28)
 
             # Set x and y labels and their font size
-            plt.xlabel("First Principal Component", fontsize=24, weight='bold')
-            plt.ylabel("Second Principal Component", fontsize=24, weight='bold')
+            plt.xlabel("First Principal Component", fontsize=28, weight='bold')
+            plt.ylabel("Second Principal Component", fontsize=28, weight='bold')
 
             if "Incremental" in title:
                 err = np.abs(np.abs(X_pca) - np.abs(X_ipca)).mean()

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import matplotlib as mpl
-
+import shap
 # Set global matplotlib parameters
 mpl.rcParams['font.family'] = 'serif'
 mpl.rcParams['font.serif'] = ['Times New Roman']
@@ -16,7 +16,7 @@ def svm_model_cross_validation(X, y, seed, cv=5):
     kf = KFold(n_splits=cv, random_state=seed, shuffle=True)
 
     params = {'C': [0.1, 1, 10],
-              'kernel': ['linear', 'rbf', 'poly', 'sigmoid']
+              'kernel': ['linear']
                 }
     grid_search = GridSearchCV(SVC(), params, cv=kf, verbose=0)
 
@@ -85,6 +85,18 @@ def svm_model_cross_validation(X, y, seed, cv=5):
     # Ensure the plot is displayed correctly with all labels visible
     plt.tight_layout()
     plt.show()
+
+    # Initialize JS for SHAP plots
+    shap.initjs()
+
+    # Create a Kernel SHAP explainer
+    explainer = shap.KernelExplainer(clf.predict, X_train)
+
+    # Calculate shap_values for all of X
+    shap_values = explainer.shap_values(X)
+
+    # Plot the SHAP values
+    shap.summary_plot(shap_values, X)
 
     return clf, all_y_test, all_y_pred
 
