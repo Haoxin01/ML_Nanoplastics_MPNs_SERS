@@ -1,10 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.feature_selection import f_classif, SelectKBest
+from sklearn.feature_selection import f_classif, SelectKBest, mutual_info_classif
 from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC  # Import the model you're using
+import matplotlib as mpl
 
+mpl.rcParams['font.family'] = 'serif'
+mpl.rcParams['font.serif'] = ['Times New Roman']
+mpl.rcParams['font.size'] = 24
 def norm(X):
     """
     This function is used to normalize the data_reference inside the samples
@@ -79,15 +83,15 @@ def plot_fsp_set(num_features_range, scores, final_scores):
 
     plt.subplot(1, 2, 1)
     plt.plot(num_features_range, scores, marker='o')
-    plt.title('Feature Selection Profile (FSP)')
-    plt.xlabel('Number of Features Selected')
-    plt.ylabel('Cross-Validation Score')
+    plt.title('Feature Selection Profile (FSP)', fontsize=20)
+    plt.xlabel('Number of Features Selected', weight='bold')
+    plt.ylabel('Cross-Validation Score', weight='bold')
 
     plt.subplot(1, 2, 2)
     plt.plot(num_features_range, final_scores, marker='o')
-    plt.title('Subset Evaluation Curve (SET)')
-    plt.xlabel('Number of Features Selected')
-    plt.ylabel('Final Model Score')
+    plt.title('Subset Evaluation Curve (SET)', fontsize=24)
+    plt.xlabel('Number of Features Selected', weight='bold')
+    plt.ylabel('Final Model Score', weight='bold')
 
     plt.tight_layout()
     plt.show()
@@ -95,7 +99,7 @@ def plot_fsp_set(num_features_range, scores, final_scores):
 
 def select_best_num_features(X, y, score_func=f_classif):
     model = SVC(kernel='linear')  # Creating an instance of SVC model for feature selection
-    num_features_range = list(range(1, 6))  # Change accordingly if you have different number of features
+    num_features_range = list(range(1, 5))  # Change accordingly if you have different number of features
     scores = []
     final_scores = []
 
@@ -104,7 +108,9 @@ def select_best_num_features(X, y, score_func=f_classif):
         X_selected = feature_selection(X, y, num_features, score_func=score_func)
 
         # Create and evaluate model
-        score = cross_val_score(model, X_selected, y, cv=5).mean()  # use 5-fold cross validation
+        score = cross_val_score(model, X_selected, y, cv=5)  # get scores for each fold
+        print('Cross-validation scores:', score)
+        score = score.mean()  # take the mean
         scores.append(score)
 
         # Train model on the whole dataset and get the final score
