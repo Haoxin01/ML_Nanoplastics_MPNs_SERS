@@ -88,6 +88,12 @@ def tsne_implementation_udexcluded(data, labels, n_components=2):
                       perplexity=70,
                       learning_rate=10,
                       ).fit_transform(data)
+
+    tsne_model = TSNE(n_components=n_components,
+                        perplexity=70,
+                        learning_rate=10,
+                        ).fit(data)
+
     tsneDf = pd.DataFrame(data=X_embedded, columns=['TSNE1', 'TSNE2'])
     # add label to tsneDf
     tsneDf['label'] = labels

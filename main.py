@@ -35,9 +35,8 @@ from src.util.train_strategy import create_confusion_matrix, plot_confusion_matr
 def prediction():
     # Env setting and data_reference loading START ----------------------------------------
     # set data_reference directory
-    data_addr = 'D:/Nanoplastics-ML/data/sample_data_augmented'
-    mixture_addr = 'D:/Nanoplastics-ML/data/mixture_data_augmented'
-    result_addr = 'D:/Nanoplastics-ML/result'
+    data_addr = 'data/sample_data_augmented'
+    result_addr = 'result'
 
     # batch process all files and return X and y with shuffling
     # if cache exist, load from cache; else, process data_reference and store to cache
@@ -59,16 +58,15 @@ def prediction():
         ye = np.load(cache_dir + '/variable/ye.npy')
 
     # Env setting and data_reference loading END ------------------------------------------
-    model_cache_path = 'D:/Nanoplastics-ML/validation/cache/model'
-    variable_cache_path = 'D:/Nanoplastics-ML/validation/cache/variable/non_mixture'
+    model_cache_path = 'validation/cache/model'
+    variable_cache_path = 'validation/cache/variable/non_mixture'
 
     # categorical_correlation
     # plot_categorical_correlation(X, y)
 
-    # # Feature selection START -------------------------------------------------
+    # # Feature selection
     # X_best = select_best_num_features(Xe, ye, score_func='mutual_info')
 
-    # # Feature selection end -------------------------------------------------
 
     # Dimension reduction START -----------------------------------------------------
     # PCA dimension reduction
@@ -76,12 +74,12 @@ def prediction():
     X_pca = pca(X, y, 2, 'all')
     # np.save(variable_cache_path + '/X_pca.npy', X_pca)
     # print('PCA dimension reduction for data_reference excluding undetected data_reference...')
-    Xe_pca = pca(Xe, ye, 2, 'UD_excluded')
+    # Xe_pca = pca(Xe, ye, 2, 'UD_excluded')
     # np.save(variable_cache_path + '/Xe_pca.npy', Xe_pca)
 
     # t-SNE dimension reduction
     print('t-SNE dimension reduction for data_reference including undetected data_reference...')
-    # X_tsne = tsne_implementation_all(X_pca, y, 2)
+    # X_tsne = tsne_implementation_all(X, y, 2)
     print('t-SNE dimension reduction for data_reference excluding undetected data_reference...')
     Xe_tsne = tsne_implementation_udexcluded(Xe, ye, 2)
 
@@ -106,7 +104,7 @@ def prediction():
 
     # Nonaplastics classification START ----------------------------------------
     # # Support Vector Machine
-    # clf, all_y_test, all_y_pred = svm_model_cross_validation(Xe_tsne, ye, 100)
+    clf, all_y_test, all_y_pred = svm_model_cross_validation(Xe_tsne, ye, 100)
     # # confusion matrix
     # cm = create_confusion_matrix(all_y_test, all_y_pred)
     # plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
