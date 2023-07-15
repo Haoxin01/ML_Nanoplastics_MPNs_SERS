@@ -30,7 +30,7 @@ from src.util.plot_categorical_correlation import plot_categorical_correlation
 from src.util.result_saver import build_result_dir
 from src.util.train_strategy import search_best_model
 from src.util.train_strategy import create_confusion_matrix, plot_confusion_matrix, compute_metrics
-from src.model.regression_model import RegressionModel
+
 
 def prediction():
     # Env setting and data_reference loading START ----------------------------------------
@@ -104,7 +104,7 @@ def prediction():
 
     # Nonaplastics classification START ----------------------------------------
     # # Support Vector Machine
-    clf, all_y_test, all_y_pred = svm_model_cross_validation(Xe_tsne, ye, 100)
+    # clf = svm_model_cross_validation(Xe_tsne, ye, 100)
     # # confusion matrix
     # cm = create_confusion_matrix(all_y_test, all_y_pred)
     # plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
@@ -113,7 +113,7 @@ def prediction():
     # print(cm)
 
     # K nearest neighbors
-    # clf, all_y_test, all_y_pred = knn_model_cross_validation(Xe_tsne, ye, 100)
+    clf = knn_model_cross_validation(Xe_tsne, ye, seed=100)
     # # confusion matrix
     # cm = create_confusion_matrix(all_y_test, all_y_pred)
     # plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
@@ -122,7 +122,7 @@ def prediction():
     # print(cm)
 
     # random forest, this use the dimension reduced data_reference
-    # clf, all_y_test, all_y_pred = rf_model_cross_validation(Xe, ye, 100)
+    clf = rf_model_cross_validation(Xe, ye, seed=100)
     # # confusion matrix
     # cm = create_confusion_matrix(all_y_test, all_y_pred)
     # plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
@@ -246,20 +246,13 @@ def prediction_mixture():
     print (accuracy, recall, precision, f1)
     print(cm)
 
-def regression():
-    plastics = ["PS", "PE", "PMMA", "PLA"]
-
-    for plastic in plastics:
-        model = RegressionModel(plastic)
-        model.fit_and_plot_all()
 
 
 
 if __name__ == '__main__':
     # outliner detection and classification for single kind of plastics
-    #  prediction()
+     prediction()
 
     # classification for mixed kinds of plastics
     #  prediction_mixture()
-    regression()
 

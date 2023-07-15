@@ -1,0 +1,2 @@
+Best_score of k nearest neighborhood:0.9707133507853403
+Best_params of k nearest neighborhood:{'n_neighbors': 10, 'weights': 'distance'}

@@ -20,11 +20,11 @@ def pca(X, y, n_components, ie):
     pca = PCA(n_components=n_components)
 
     save_pca = pca.fit(X)
-    save_path = 'validation/cache/model/dimension_reduction'
+    # save_path = 'validation/cache/model/dimension_reduction'
     # save pca model with pickle
-    import pickle
-    with open(save_path + '/' + ie + '_pca.pkl', 'wb') as f:
-        pickle.dump(save_pca, f)
+    # import pickle
+    # with open(save_path + '/' + ie + '_pca.pkl', 'wb') as f:
+    #     pickle.dump(save_pca, f)
     X_pca = pca.fit_transform(X)
 
     # list to array

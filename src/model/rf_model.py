@@ -29,73 +29,61 @@ def rf_model_cross_validation(X, y, seed, cv=5):
               'min_samples_leaf': [1, 2, 4]}
     grid_search = GridSearchCV(RandomForestClassifier(), params, cv=kf, verbose=0)
 
-    best_score = 0
-    best_params = None
+    grid_search.fit(X, y)
+    best_score = grid_search.best_score_
+    best_params = grid_search.best_params_
+    clf = grid_search.best_estimator_
+    print('Best_score of random forest:', best_score)
 
-    all_y_test = []
-    all_y_pred = []
+    clf_with_all = RandomForestClassifier(n_estimators=best_params['n_estimators'],
+                                            max_depth=best_params['max_depth'],
+                                            min_samples_split=best_params['min_samples_split'],
+                                            min_samples_leaf=best_params['min_samples_leaf'])
+    clf_with_all.fit(X, y)
+    # save clf_with_all model with pickle
+    import pickle
+    save_path = 'validation/cache/model/random_forest'
+    with open(save_path + '/random_forest.pkl', 'wb') as f:
+        pickle.dump(clf_with_all, f)
 
-    for train_index, test_index in kf.split(X):
-        X_train, X_test = X[train_index], X[test_index]
-        y_train, y_test = y[train_index], y[test_index]
+    # save best_params and best_score
+    with open(save_path + '/rf_best_info.pkl', 'w') as f:
+        f.write('best_score: ' + str(best_score) + '\n')
+        f.write('best_params: ' + str(best_params) + '\n')
+        f.close()
 
-        grid_search.fit(X_train, y_train)
 
-        if grid_search.best_score_ > best_score:
-            best_score = grid_search.best_score_
-            best_params = grid_search.best_params_
+    # # Add your decision boundary plot and other visualizations here
+    #
+    # # Create a list to store the errors for each tree in the forest
+    # cumulative_errors = []
+    #
+    # # Fit the model and calculate the error for each tree
+    # for n_trees in range(1, clf.n_estimators + 1):
+    #     clf.set_params(n_estimators=n_trees)
+    #     clf.fit(X, y)
+    #     y_pred_all = clf.predict(X)
+    #     error = mean_squared_error(y, y_pred_all)
+    #     cumulative_errors.append(error)
+    #
+    # # Plot the cumulative errors over the number of trees
+    # plt.figure(figsize=(10, 7))
+    # plt.plot(range(1, clf.n_estimators + 1), cumulative_errors, marker='o')
+    # plt.xlabel('Number of Trees', fontsize=24, weight='bold')
+    # plt.ylabel('Cumulative Error', fontsize=24, weight='bold')
+    # plt.title('Random Forest Cumulative Errors over Number of Trees', fontsize=24, weight='bold')
+    # plt.show()
+    #
+    # # Initialize JS for SHAP plots
+    # shap.initjs()
+    #
+    # # Create a Kernel SHAP explainer
+    # explainer = shap.KernelExplainer(clf.predict, X_train)
+    #
+    # # Calculate shap_values for all of X
+    # shap_values = explainer.shap_values(X)
+    #
+    # # Plot the SHAP values
+    # shap.summary_plot(shap_values, X)
 
-        clf = grid_search.best_estimator_
-        y_pred = clf.predict(X_test)
-
-        all_y_test.extend(y_test)
-        all_y_pred.extend(y_pred)
-
-    print("\nCross-validation RF Accuracy: ")
-    print(accuracy_score(all_y_test, all_y_pred))
-
-    # Train final model on all data with best parameters
-    clf = RandomForestClassifier(n_estimators=best_params['n_estimators'],
-                                 max_depth=best_params['max_depth'],
-                                 min_samples_split=best_params['min_samples_split'],
-                                 min_samples_leaf=best_params['min_samples_leaf'])
-    clf.fit(X, y)
-    y_pred_all = clf.predict(X)
-
-    print("\nFinal RF Accuracy on all data: ")
-    print(accuracy_score(y, y_pred_all))
-
-    # Add your decision boundary plot and other visualizations here
-
-    # Create a list to store the errors for each tree in the forest
-    cumulative_errors = []
-
-    # Fit the model and calculate the error for each tree
-    for n_trees in range(1, clf.n_estimators + 1):
-        clf.set_params(n_estimators=n_trees)
-        clf.fit(X, y)
-        y_pred_all = clf.predict(X)
-        error = mean_squared_error(y, y_pred_all)
-        cumulative_errors.append(error)
-
-    # Plot the cumulative errors over the number of trees
-    plt.figure(figsize=(10, 7))
-    plt.plot(range(1, clf.n_estimators + 1), cumulative_errors, marker='o')
-    plt.xlabel('Number of Trees', fontsize=24, weight='bold')
-    plt.ylabel('Cumulative Error', fontsize=24, weight='bold')
-    plt.title('Random Forest Cumulative Errors over Number of Trees', fontsize=24, weight='bold')
-    plt.show()
-
-    # Initialize JS for SHAP plots
-    shap.initjs()
-
-    # Create a Kernel SHAP explainer
-    explainer = shap.KernelExplainer(clf.predict, X_train)
-
-    # Calculate shap_values for all of X
-    shap_values = explainer.shap_values(X)
-
-    # Plot the SHAP values
-    shap.summary_plot(shap_values, X)
-
-    return clf, all_y_test, all_y_pred
+    return clf
