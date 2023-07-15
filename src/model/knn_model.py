@@ -17,11 +17,15 @@ mpl.rcParams['font.family'] = 'serif'
 mpl.rcParams['font.serif'] = ['Times New Roman']
 mpl.rcParams['font.size'] = 22
 
+
 def knn_model_cross_validation(X, y, seed, cv=5):
     kf = KFold(n_splits=cv, random_state=seed, shuffle=True)
 
     params = {'n_neighbors': range(10, 50), 'weights': ['uniform', 'distance']}
     grid_search = GridSearchCV(KNeighborsClassifier(), params, cv=kf, verbose=0)
+
+    best_score = 0
+    best_params = None
 
     all_y_test = []
     all_y_pred = []
@@ -31,6 +35,11 @@ def knn_model_cross_validation(X, y, seed, cv=5):
         y_train, y_test = y[train_index], y[test_index]
 
         grid_search.fit(X_train, y_train)
+
+        if grid_search.best_score_ > best_score:
+            best_score = grid_search.best_score_
+            best_params = grid_search.best_params_
+
         clf = grid_search.best_estimator_
         y_pred = clf.predict(X_test)
 
@@ -41,6 +50,8 @@ def knn_model_cross_validation(X, y, seed, cv=5):
     print(accuracy_score(all_y_test, all_y_pred))
 
     # Train final model on all data with best parameters
+    clf = KNeighborsClassifier(n_neighbors=best_params['n_neighbors'],
+                               weights=best_params['weights'])
     clf.fit(X, y)
     y_pred_all = clf.predict(X)
 

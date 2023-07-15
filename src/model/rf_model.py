@@ -19,6 +19,7 @@ from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
 import shap
 
+
 def rf_model_cross_validation(X, y, seed, cv=5):
     kf = KFold(n_splits=cv, random_state=seed, shuffle=True)
 
@@ -28,6 +29,9 @@ def rf_model_cross_validation(X, y, seed, cv=5):
               'min_samples_leaf': [1, 2, 4]}
     grid_search = GridSearchCV(RandomForestClassifier(), params, cv=kf, verbose=0)
 
+    best_score = 0
+    best_params = None
+
     all_y_test = []
     all_y_pred = []
 
@@ -36,6 +40,11 @@ def rf_model_cross_validation(X, y, seed, cv=5):
         y_train, y_test = y[train_index], y[test_index]
 
         grid_search.fit(X_train, y_train)
+
+        if grid_search.best_score_ > best_score:
+            best_score = grid_search.best_score_
+            best_params = grid_search.best_params_
+
         clf = grid_search.best_estimator_
         y_pred = clf.predict(X_test)
 
@@ -46,6 +55,10 @@ def rf_model_cross_validation(X, y, seed, cv=5):
     print(accuracy_score(all_y_test, all_y_pred))
 
     # Train final model on all data with best parameters
+    clf = RandomForestClassifier(n_estimators=best_params['n_estimators'],
+                                 max_depth=best_params['max_depth'],
+                                 min_samples_split=best_params['min_samples_split'],
+                                 min_samples_leaf=best_params['min_samples_leaf'])
     clf.fit(X, y)
     y_pred_all = clf.predict(X)
 
