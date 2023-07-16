@@ -101,6 +101,8 @@ class isoForest():
         # Fit to the data and find the best parameters
         grid_search.fit(self.X_train, self.y_train)
 
+
+
         # Save the best model
         joblib.dump(grid_search.best_estimator_, 'isoForest_best_model.joblib')
 

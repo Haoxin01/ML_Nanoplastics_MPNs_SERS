@@ -77,6 +77,7 @@ def prediction():
     # Xe_pca = pca(Xe, ye, 2, 'UD_excluded')
     # np.save(variable_cache_path + '/Xe_pca.npy', Xe_pca)
 
+
     # t-SNE dimension reduction
     print('t-SNE dimension reduction for data_reference including undetected data_reference...')
     # X_tsne = tsne_implementation_all(X, y, 2)

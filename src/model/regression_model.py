@@ -37,7 +37,7 @@ def fit_and_plot(plastic, xdata, ydata, func, func_name, yerr):
 
 # 定义数据处理函数
 def process_data(plastic):
-    df = pd.read_csv(f'D:\\Nanoplastics-ML\\data\\regression_data\\{plastic}.csv', header=None)
+    df = pd.read_csv(f'/Users/shiyujiang/Desktop/Nanoplastics-ML/data/regression_data/{plastic}.csv', header=None)
     df = df.T
     df.columns = ['Concentration', 'Intensity']
     df_group = df.groupby('Concentration').agg(['mean', 'std']).reset_index()
@@ -46,11 +46,13 @@ def process_data(plastic):
     yerr = df_group[('Intensity', 'std')].values
     return xdata, ydata, yerr
 
-# 主程序
-plastics = ['PS', 'PE', 'PMMA', 'PLA']
-functions = {'logistic': logistic, 'exponential': exponential, 'polynomial': polynomial}
 
-for plastic in plastics:
-    xdata, ydata, yerr = process_data(plastic)
-    for func_name, func in functions.items():
-        fit_and_plot(plastic, xdata, ydata, func, func_name, yerr)
+if __name__ == '__main__':
+    # 主程序
+    plastics = ['PS', 'PE', 'PMMA', 'PLA']
+    functions = {'logistic': logistic, 'exponential': exponential, 'polynomial': polynomial}
+
+    for plastic in plastics:
+        xdata, ydata, yerr = process_data(plastic)
+        for func_name, func in functions.items():
+            fit_and_plot(plastic, xdata, ydata, func, func_name, yerr)

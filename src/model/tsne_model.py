@@ -98,7 +98,7 @@ def tsne_implementation_udexcluded(data, labels, n_components=2):
     # add label to tsneDf
     tsneDf['label'] = labels
     # save
-    tsneDf.to_csv(result_dir + '/all_tsne_to2d.csv', index=False)
+    # tsneDf.to_csv(result_dir + '/all_tsne_to2d.csv', index=False)
     # use X_embedded and labels to plot
     colors = sns.color_palette("Set2", 5)
     plt.figure(figsize=(10, 10))
@@ -120,34 +120,34 @@ def tsne_implementation_udexcluded(data, labels, n_components=2):
     plt.legend(loc="upper right", shadow=False, scatterpoints=1, fontsize=24)
     plt.xlim([-50, 50])
     plt.ylim([-50, 50])
-    plt.savefig(result_dir + '/udexcluded_tsne_to2d.png')
+    # plt.savefig(result_dir + '/udexcluded_tsne_to2d.png')
     plt.close()
 
     # record information
-    with open(result_dir + '/udexcluded_tsne_to2d.txt', 'w') as f:
-        # write
-        f.write('t-SNE-------------------------------------------\n')
-        f.write('n_components_-------------------------------------------\n')
-        f.write(str(n_components) + '\n')
-        f.write('perplexity_-------------------------------------------\n')
-        f.write(str(30) + '\n')
-        f.write('early_exaggeration_-------------------------------------------\n')
-        f.write(str(12) + '\n')
-        f.write('learning_rate_-------------------------------------------\n')
-        f.write(str(200) + '\n')
-        f.write('n_iter_-------------------------------------------\n')
-        f.write(str(1000) + '\n')
-        f.write('n_iter_without_progress_-------------------------------------------\n')
-        f.write(str(300) + '\n')
-        f.write('min_grad_norm_-------------------------------------------\n')
-        f.write(str(1e-07) + '\n')
-        f.write('metric_-------------------------------------------\n')
-        f.write(str('euclidean') + '\n')
-        f.write('init_-------------------------------------------\n')
-        f.write(str('random') + '\n')
-        f.write('verbose_-------------------------------------------\n')
-        f.write(str(0) + '\n')
-        f.close()
+    # with open(result_dir + '/udexcluded_tsne_to2d.txt', 'w') as f:
+    #     # write
+    #     f.write('t-SNE-------------------------------------------\n')
+    #     f.write('n_components_-------------------------------------------\n')
+    #     f.write(str(n_components) + '\n')
+    #     f.write('perplexity_-------------------------------------------\n')
+    #     f.write(str(30) + '\n')
+    #     f.write('early_exaggeration_-------------------------------------------\n')
+    #     f.write(str(12) + '\n')
+    #     f.write('learning_rate_-------------------------------------------\n')
+    #     f.write(str(200) + '\n')
+    #     f.write('n_iter_-------------------------------------------\n')
+    #     f.write(str(1000) + '\n')
+    #     f.write('n_iter_without_progress_-------------------------------------------\n')
+    #     f.write(str(300) + '\n')
+    #     f.write('min_grad_norm_-------------------------------------------\n')
+    #     f.write(str(1e-07) + '\n')
+    #     f.write('metric_-------------------------------------------\n')
+    #     f.write(str('euclidean') + '\n')
+    #     f.write('init_-------------------------------------------\n')
+    #     f.write(str('random') + '\n')
+    #     f.write('verbose_-------------------------------------------\n')
+    #     f.write(str(0) + '\n')
+    #     f.close()
 
     # # grid search
     # # Set the possible values of perplexity and learning rate

@@ -13,6 +13,7 @@ def reload_self():
     model_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model'
     model_name = 'isoForest'
     model_full_path = model_path + '/' + model_name + '_self_model.joblib'
+    # clf = load('/Users/shiyujiang/Desktop/Nanoplastics-ML/isoForest_best_model.joblib')
     clf = load(model_full_path)
     return clf
 

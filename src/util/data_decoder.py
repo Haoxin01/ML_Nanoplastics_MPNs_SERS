@@ -27,8 +27,10 @@ def batch_data_decoder(data_addr):
 def data_concat(data, if_shuffle: bool, shuffle_seed):
     X = []
     y = []
+    con_list = []
     Xe = []
     ye = []
+    cone_list = []
     concat_data = {}
     for item in data:
         print('processing: ', item, '...')
@@ -45,15 +47,18 @@ def data_concat(data, if_shuffle: bool, shuffle_seed):
     for key in concat_data:
         X.append(concat_data[key])
         y.append(label_identifier(key))
+        con_list.append(key)
         if label_identifier(key) != 4:
             Xe.append(concat_data[key])
             ye.append(label_identifier(key))
+            cone_list.append(key)
 
     print('normalizing X...')
     X = norm(X)
     Xe = norm(Xe)
 
-    return X, y, Xe, ye
+    return X, y, con_list, Xe, ye, cone_list
+    # return X, y, Xe, ye
 
 
 def data_concat_mixture(data, if_shuffle: bool, shuffle_seed: int, mixture_type: str):
