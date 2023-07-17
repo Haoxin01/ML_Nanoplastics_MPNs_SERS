@@ -3,7 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from sklearn.metrics import r2_score
+import matplotlib as mpl
 
+mpl.rcParams['font.serif'] = ['Times New Roman']
 # 定义三种函数模型
 def logistic(x, a, b, c):
     return a / (1 + np.exp(-c * (x - b)))
@@ -25,10 +27,10 @@ def fit_and_plot(plastic, xdata, ydata, func, func_name, yerr):
     ax.plot(x_continuous, y_pred_continuous, label=f'{func_name}', linewidth=3.5)
     ax.scatter(xdata, ydata, color='black')
     ax.errorbar(xdata, ydata, yerr=yerr, fmt='o', color='black')
-    ax.set_xlabel('Concentration (ppm)', fontsize=22, weight='bold')
-    ax.set_ylabel('Intensity (a.u.)', fontsize=22, weight='bold')
+    ax.set_xlabel('Concentration (ppm)', fontsize=30, weight='bold')
+    ax.set_ylabel('Intensity (a.u.)', fontsize=30, weight='bold')
     ax.grid(False)
-    ax.tick_params(axis='both', which='major', labelsize=22)
+    ax.tick_params(axis='both', which='major', labelsize=30)
     for spine in ax.spines.values():
         spine.set_linewidth(2.5)
     plt.show()
