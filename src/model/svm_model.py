@@ -7,6 +7,7 @@ import seaborn as sns
 import numpy as np
 import matplotlib as mpl
 import shap
+
 # Set global matplotlib parameters
 mpl.rcParams['font.family'] = 'serif'
 mpl.rcParams['font.serif'] = ['Times New Roman']
@@ -41,7 +42,6 @@ def svm_model_cross_validation(X, y, seed, cv=5):
         f.write('\n')
         f.write(str(best_params))
         f.close()
-
 
     # # decision boundary plot
     # h = .02  # step size in the mesh
@@ -98,6 +98,3 @@ def svm_model_cross_validation(X, y, seed, cv=5):
     # shap.summary_plot(shap_values, X)
 
     return clf
-
-
-

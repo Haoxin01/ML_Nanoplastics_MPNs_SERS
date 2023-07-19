@@ -2,9 +2,11 @@ from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, prec
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+
 def create_confusion_matrix(true, pred):
     cm = confusion_matrix(true, pred, normalize='true')  # normalize on true labels
     return cm
+
 
 def plot_confusion_matrix(cm, labels):
     plt.figure(figsize=(10, 7))
@@ -13,6 +15,7 @@ def plot_confusion_matrix(cm, labels):
     plt.xlabel("Predicted Label")
     plt.ylabel("True Label")
     plt.show()
+
 
 def compute_metrics(true, pred):
     accuracy = accuracy_score(true, pred)

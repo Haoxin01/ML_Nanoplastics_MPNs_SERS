@@ -4,6 +4,7 @@ from sklearn.datasets import load_iris
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
 def lda_all(data, target, n_dim):
     '''
     :param data: (n_samples, n_features)
@@ -57,6 +58,7 @@ def lda_all(data, target, n_dim):
 
     return data_ndim
 
+
 def lda_udexcluded(data, target, n_dim):
     lda_model = LinearDiscriminantAnalysis(n_components=n_dim)
     lda_model.fit(data, target)
@@ -66,14 +68,14 @@ def lda_udexcluded(data, target, n_dim):
     plt.figure(figsize=(9, 9))
     colors = ["navy", "turquoise", "darkorange", "red", "green", "blue", "yellow"]
     for color, i, target_name in zip(colors, [0, 1, 2, 3, 4, 5, 6],
-                                        ['PE', 'PLA', 'PMMA', 'PS', 'PS_PE', 'PS_PLA', 'PA_PMMA']):
-            plt.scatter(
-                data_ndim[target == i, 0],
-                data_ndim[target == i, 1],
-                color=color,
-                lw=2,
-                label=target_name,
-            )
+                                     ['PE', 'PLA', 'PMMA', 'PS', 'PS_PE', 'PS_PLA', 'PA_PMMA']):
+        plt.scatter(
+            data_ndim[target == i, 0],
+            data_ndim[target == i, 1],
+            color=color,
+            lw=2,
+            label=target_name,
+        )
     plt.title('LDA of Nano-plastic dataset')
     plt.legend(loc="best", shadow=False, scatterpoints=1)
     plt.savefig('result/lda/LDA udexcluded of Nano-plastic.png')
@@ -93,6 +95,5 @@ def lda_udexcluded(data, target, n_dim):
         f.write('xbar_: ' + str(lda_model.xbar_) + '\n')
         f.write('classes_: ' + str(lda_model.classes_) + '\n')
         f.close()
-
 
     return data_ndim

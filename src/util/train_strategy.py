@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC
 
+
 def cross_validation(Xe_pca, ye, model):
     socres = cross_val_score(model, Xe_pca, ye, cv=8)
     print(f"Cross validation scores: {socres}")
@@ -22,7 +23,8 @@ def search_best_model(Xe_pca, ye, model, model_param, labels, model_cache_path, 
         if svm_acc > max_accuracy:
             max_accuracy = svm_acc
             best_seed = seed
-            print(f"Best seed: {best_seed}, Best accuracy: {max_accuracy}, Best precision: {svm_prec}, Best recall: {svm_rec}, Best f1: {svm_f1}")
+            print(
+                f"Best seed: {best_seed}, Best accuracy: {max_accuracy}, Best precision: {svm_prec}, Best recall: {svm_rec}, Best f1: {svm_f1}")
             cm = create_confusion_matrix(svm_test, svm_pred)
             plot_confusion_matrix(cm, labels)
             print(f"Confusion matrix: {cm}")

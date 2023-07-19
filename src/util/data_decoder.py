@@ -3,7 +3,8 @@ import random
 
 import numpy as np
 import pandas as pd
-from src.util.feature_engineering import norm, zscore_norm
+from src.util.feature_engineering import norm
+
 
 def batch_data_decoder(data_addr):
     """
@@ -11,7 +12,8 @@ def batch_data_decoder(data_addr):
     """
     # loop all files in the directory
     data = {}
-    print('processing data_reference in: ', data_addr, '...', 'filter data_reference with 811.69, 869.87, 998.37, 1295.78 of range -+ 5.')
+    print('processing data_reference in: ', data_addr, '...',
+          'filter data_reference with 811.69, 869.87, 998.37, 1295.78 of range -+ 5.')
     for file in os.listdir(data_addr):
         # get file name
         file_name = os.path.splitext(file)[0]
@@ -169,6 +171,7 @@ def label_identifier(label):
               'PE, PLA, PMMA, PS, UD (undetected group).')
         exit(-1)
 
+
 def data_input(addr):
     """
     This function is used to input data_reference from csv file.
@@ -207,11 +210,11 @@ def return_feature_dict(data):
             # get the row index from temp_list
             temp_list_index = data[(data['wavenumber'] >= start) & (data['wavenumber'] <= end)].index.tolist()
             #  get the max peak in the range
-            for i in range(len(temp_list)-2):
-                if data.iloc[temp_list_index[i+1], key_index] > data.iloc[temp_list_index[i], key_index] and \
-                    data.iloc[temp_list_index[i+1], key_index] > data.iloc[temp_list_index[i+2], key_index]:
-                    if max_peak < data.iloc[temp_list_index[i+1], key_index]:
-                        max_peak = data.iloc[temp_list_index[i+1], key_index]
+            for i in range(len(temp_list) - 2):
+                if data.iloc[temp_list_index[i + 1], key_index] > data.iloc[temp_list_index[i], key_index] and \
+                        data.iloc[temp_list_index[i + 1], key_index] > data.iloc[temp_list_index[i + 2], key_index]:
+                    if max_peak < data.iloc[temp_list_index[i + 1], key_index]:
+                        max_peak = data.iloc[temp_list_index[i + 1], key_index]
 
             dict[key].append(max_peak)
 
@@ -243,7 +246,6 @@ def mixture_data_decoder(X, mixture_type):
         print('Error: mixture type is not in the mixture type list, please check ')
         exit(-1)
     return X
-
 
 
 def shuffle(dict_data, random_state):

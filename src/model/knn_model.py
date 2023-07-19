@@ -44,7 +44,6 @@ def knn_model_cross_validation(X, y, seed, cv=5):
         f.write('Best_params of k nearest neighborhood:' + str(best_params) + '\n')
         f.close()
 
-
     # # decision boundary plot
     # h = .02  # step size in the mesh
     # x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
@@ -75,5 +74,3 @@ def knn_model_cross_validation(X, y, seed, cv=5):
     # plt.show()
 
     return clf
-
-

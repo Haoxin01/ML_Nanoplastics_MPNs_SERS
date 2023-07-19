@@ -13,7 +13,6 @@ from src.model.lda_model import lda_all, lda_udexcluded
 from src.model.pca_model import pca, pca_mixture
 from src.model.rf_model import rf_model_cross_validation
 from src.model.svm_model import svm_model_cross_validation
-from src.model.ensemble_model import ensemble_model
 from src.model.kmeans_model import kmeans_model
 from src.model.tsne_model import tsne_implementation_all, tsne_implementation_udexcluded, tsne_mixture
 from src.util.data_decoder import (
@@ -27,7 +26,6 @@ from src.util.data_decoder import (
 )
 from src.util.feature_engineering import norm, select_best_num_features
 from src.util.plot_categorical_correlation import plot_categorical_correlation
-from src.util.result_saver import build_result_dir
 from src.util.train_strategy import search_best_model
 from src.util.train_strategy import create_confusion_matrix, plot_confusion_matrix, compute_metrics
 

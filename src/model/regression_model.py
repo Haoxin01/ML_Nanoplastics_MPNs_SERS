@@ -4,17 +4,19 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from sklearn.metrics import r2_score
 
-# 定义三种函数模型
+
 def logistic(x, a, b, c):
     return a / (1 + np.exp(-c * (x - b)))
+
 
 def exponential(x, a, b, c):
     return a * np.exp(b * x) + c
 
-def polynomial(x, a, b, c):
-    return a * x**2 + b * x + c
 
-# 定义拟合并画图函数
+def polynomial(x, a, b, c):
+    return a * x ** 2 + b * x + c
+
+
 def fit_and_plot(plastic, xdata, ydata, func, func_name, yerr):
     popt, pcov = curve_fit(func, xdata, ydata, maxfev=5000)
     x_continuous = np.linspace(min(xdata), max(xdata), 500)
@@ -35,9 +37,10 @@ def fit_and_plot(plastic, xdata, ydata, func, func_name, yerr):
     print(f'Fitted parameters: {popt}')
     print(f'R2 score: {r2:.4f}')
 
+
 # 定义数据处理函数
 def process_data(plastic):
-    df = pd.read_csv(f'/Users/shiyujiang/Desktop/Nanoplastics-ML/data/regression_data/{plastic}.csv', header=None)
+    df = pd.read_csv(f'data/regression_data/{plastic}.csv', header=None)
     df = df.T
     df.columns = ['Concentration', 'Intensity']
     df_group = df.groupby('Concentration').agg(['mean', 'std']).reset_index()

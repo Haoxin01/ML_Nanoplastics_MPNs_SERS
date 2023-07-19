@@ -15,7 +15,7 @@ from src.util.data_decoder import (
     return_feature_dict,
     shuffle,
 )
-from validation.cache.reload_test import *
+
 
 def knn_prediction():
     # reload knn model pkl file from cache
@@ -31,16 +31,6 @@ def knn_prediction():
     # print accuracy
     print('Accuracy of KNN classifier on test set: {:.2f}'.format(knn.score(X_test, y_test)))
 
-
-
-def random_forest_prediction():
-    pass
-
-def isoforest_prediction():
-    pass
-
-def regression_prediction():
-    pass
 
 def tsne_reduction(X, y):
     Xe = np.load('/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/variable/non-mixture/Xe.npy')
@@ -62,22 +52,18 @@ def tsne_reduction(X, y):
             knn = pickle.load(f)
         y_pred = knn.predict(Xe_tsne)
         res_list.append(y_pred[-1])
-        concentration_list.append(concentration[i])
+        print('Finish i th tsne: ', i + 1, 'in total: ', len(X))
 
     cm = create_confusion_matrix(y, res_list)
     plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
-
-    print()
+    accuracy, recall, precision, f1 = compute_metrics(y, res_list)
+    print('Accuracy: ', accuracy)
+    print('Recall: ', recall)
+    print('Precision: ', precision)
+    print('F1: ', f1)
 
     return res_list
 
-def pca_reduction():
-
-    pass
-
-
-def data_reader():
-    pass
 
 if __name__ == '__main__':
     # load data
@@ -88,21 +74,20 @@ if __name__ == '__main__':
     data = batch_data_decoder(path_tap)
     X, y, con_list, Xe, ye, cone_list = data_concat(data, if_shuffle=True, shuffle_seed=0)
     # load pca pkl file
-    with open('/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model/dimension_reduction/pca_outlier.pkl', 'rb') as f:
-        pca = pickle.load(f)
-    # map to pca space
-    X_pca = pca.transform(X)
-
-    iso_forest = reload_self()
-    # out = iso_forest.predict(X_pca)
-    out = iso_forest.clf.predict(X_pca)
-    # print percentage of 1 in out
-    print(np.sum(out == 1) / len(out))
+    # with open('/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model/dimension_reduction/pca_outlier.pkl', 'rb') as f:
+    #     pca = pickle.load(f)
+    # # map to pca space
+    # X_pca = pca.transform(X)
+    #
+    # iso_forest = reload_self()
+    # # out = iso_forest.predict(X_pca)
+    # out = iso_forest.clf.predict(X_pca)
+    # # print percentage of 1 in out
+    # print(np.sum(out == 1) / len(out))
 
     # tsne
     res_list = tsne_reduction(X, y)
     print()
-
 
     # for tap
     # data = batch_data_decoder(path_tap)

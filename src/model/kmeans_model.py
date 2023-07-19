@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
+
 def kmeans_model(X, y, n_clusters, seed, n_init=10):
     # Ensure data is float64
     X = X.astype(np.float64)
@@ -45,4 +46,3 @@ def kmeans_model(X, y, n_clusters, seed, n_init=10):
     plt.show()
 
     return kmeans, y, y_pred
-

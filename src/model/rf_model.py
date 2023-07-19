@@ -36,9 +36,9 @@ def rf_model_cross_validation(X, y, seed, cv=5):
     print('Best_score of random forest:', best_score)
 
     clf_with_all = RandomForestClassifier(n_estimators=best_params['n_estimators'],
-                                            max_depth=best_params['max_depth'],
-                                            min_samples_split=best_params['min_samples_split'],
-                                            min_samples_leaf=best_params['min_samples_leaf'])
+                                          max_depth=best_params['max_depth'],
+                                          min_samples_split=best_params['min_samples_split'],
+                                          min_samples_leaf=best_params['min_samples_leaf'])
     clf_with_all.fit(X, y)
     # save clf_with_all model with pickle
     import pickle
@@ -51,7 +51,6 @@ def rf_model_cross_validation(X, y, seed, cv=5):
         f.write('best_score: ' + str(best_score) + '\n')
         f.write('best_params: ' + str(best_params) + '\n')
         f.close()
-
 
     # # Add your decision boundary plot and other visualizations here
     #

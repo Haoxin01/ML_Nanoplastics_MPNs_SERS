@@ -12,6 +12,7 @@ mpl.rcParams['font.family'] = 'serif'
 mpl.rcParams['font.serif'] = ['Times New Roman']
 mpl.rcParams['font.size'] = 22
 
+
 # PCA and incremental PCA
 def pca(X, y, n_components, ie):
     ipca = IncrementalPCA(n_components=n_components, batch_size=3)
@@ -117,4 +118,3 @@ def pca(X, y, n_components, ie):
 
 def pca_mixture():
     pass
-

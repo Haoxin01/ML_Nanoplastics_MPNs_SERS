@@ -90,7 +90,7 @@ def random_noise_scalar(augmentation_ratio):
 
 
 if __name__ == '__main__':
-    abs_path = '/Users/shiyujiang/Desktop/Nanoplastics-ML/src/augmentation'
+    abs_path = 'data/original_data'
     ratio = 1 / 15
     times = 10
     data_augmentation(abs_path+'/data', ratio, times)

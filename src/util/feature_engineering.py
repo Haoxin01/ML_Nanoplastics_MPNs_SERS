@@ -9,6 +9,8 @@ import matplotlib as mpl
 mpl.rcParams['font.family'] = 'serif'
 mpl.rcParams['font.serif'] = ['Times New Roman']
 mpl.rcParams['font.size'] = 24
+
+
 def norm(X):
     """
     This function is used to normalize the data_reference inside the samples
@@ -26,19 +28,6 @@ def norm(X):
                 X[i][j] = (X[i][j] - min_value) / (max_value - min_value)
     return X
 
-def zscore_norm(X):
-    """
-    This function is used to normalize the data_reference inside the samples
-    :param dict:
-    :return: dict
-    """
-    # normalization x
-    for i in range(len(X)):
-        mean_value = np.mean(X[i])
-        std_value = np.std(X[i])
-        for j in range(len(X[i])):
-            X[i][j] = (X[i][j] - mean_value) / std_value
-    return X
 
 def feature_selection(X, y, k, score_func='mutual_info'):
     """
@@ -67,13 +56,13 @@ def feature_selection(X, y, k, score_func='mutual_info'):
     dfcolumns = pd.DataFrame(X.columns)
 
     # Concat two dataframes for better visualization
-    featureScores = pd.concat([dfcolumns,dfscores],axis=1)
-    featureScores.columns = ['Feature','Score']  # Naming the dataframe columns
+    featureScores = pd.concat([dfcolumns, dfscores], axis=1)
+    featureScores.columns = ['Feature', 'Score']  # Naming the dataframe columns
 
-    print(featureScores.nlargest(k,'Score'))  # Print k best features
+    print(featureScores.nlargest(k, 'Score'))  # Print k best features
 
     # Creating DataFrame of k best features
-    X_best = X[featureScores.nlargest(k,'Score')['Feature'].values]
+    X_best = X[featureScores.nlargest(k, 'Score')['Feature'].values]
 
     return X_best
 

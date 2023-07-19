@@ -1,1 +1,0 @@
-result from data with UD, mixtures, and single components.

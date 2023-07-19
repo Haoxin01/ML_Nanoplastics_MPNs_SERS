@@ -6,6 +6,7 @@ import warnings
 import numpy as np
 import matplotlib as mpl
 import seaborn as sns
+
 # import matplotlib
 # matplotlib.use('TkAgg')
 
@@ -13,6 +14,7 @@ import seaborn as sns
 mpl.rcParams['font.family'] = 'serif'
 mpl.rcParams['font.serif'] = ['Times New Roman']
 mpl.rcParams['font.size'] = 24
+
 
 def tsne_implementation_all(data, labels, n_components=2):
     # Convert your data to a numpy array if it's not already
@@ -32,7 +34,7 @@ def tsne_implementation_all(data, labels, n_components=2):
     colors = sns.color_palette("Set2", 5)
     plt.figure(figsize=(10, 10))
     for color, i, target_name in zip(colors, [0, 1, 2, 3, 4],
-                                        ['PE', 'PLA', 'PMMA', 'PS', 'UD']):
+                                     ['PE', 'PLA', 'PMMA', 'PS', 'UD']):
         plt.scatter(
             X_embedded[labels == i, 0],
             X_embedded[labels == i, 1],
@@ -79,6 +81,7 @@ def tsne_implementation_all(data, labels, n_components=2):
         f.close()
     return X_embedded
 
+
 def tsne_implementation_udexcluded(data, labels, n_components=2):
     # Convert your data to a numpy array if it's not already
     data = np.array(data)
@@ -90,9 +93,9 @@ def tsne_implementation_udexcluded(data, labels, n_components=2):
                       ).fit_transform(data)
 
     tsne_model = TSNE(n_components=n_components,
-                        perplexity=70,
-                        learning_rate=10,
-                        ).fit(data)
+                      perplexity=70,
+                      learning_rate=10,
+                      ).fit(data)
 
     tsneDf = pd.DataFrame(data=X_embedded, columns=['TSNE1', 'TSNE2'])
     # add label to tsneDf
@@ -216,7 +219,5 @@ def tsne_mixture(data, labels, n_components: int, mixture_type: str):
     plt.ylim([-70, 70])
     plt.show()
     plt.close()
-
-
 
     return X_embedded

@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, precision_score, f1_score
 from src.util.train_strategy import create_confusion_matrix, plot_confusion_matrix, compute_metrics
 
+
 class isoForest():
     def __init__(self, X_pca, y, result_path):
         self.X = X_pca
@@ -72,7 +73,6 @@ class isoForest():
         plt.savefig(self.path + 'pre-visualization.png')
         plt.show()
 
-
     def train(self):
         seed = 0
         self.clf = IsolationForest(
@@ -84,7 +84,6 @@ class isoForest():
             # bootstrap=True,
         ).fit(self.X_train)
 
-
     def find_best_params(self):
         # Define the parameter grid
         param_grid = {
@@ -94,22 +93,18 @@ class isoForest():
 
         # Create the GridSearchCV object
         grid_search = GridSearchCV(IsolationForest(max_samples='auto', max_features=2),
-                                    param_grid,
-                                    cv=5,
-                                    scoring='accuracy')
+                                   param_grid,
+                                   cv=5,
+                                   scoring='accuracy')
 
         # Fit to the data and find the best parameters
         grid_search.fit(self.X_train, self.y_train)
-
-
 
         # Save the best model
         joblib.dump(grid_search.best_estimator_, 'isoForest_best_model.joblib')
 
         # Replace the existing model with the best model
         self.clf = grid_search.best_estimator_
-
-
 
     def plot_discrete(self, if_loop=False, loop_path=None):
         X = self.vis_X
@@ -190,8 +185,6 @@ class isoForest():
         print("Precision:", precision)
         print("F1 Score:", f1)
 
-
-
     def analyze(self):
         # analyze prediction result and save to txt file
         y_pred = self.clf.predict(self.X_train)
@@ -217,6 +210,3 @@ class isoForest():
         plot_confusion_matrix(cm, labels=["inliers", "outliers"])
 
         f.close()
-
-
-

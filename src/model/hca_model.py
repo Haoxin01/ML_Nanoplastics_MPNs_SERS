@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
+
 def hca_model(X, y, n_clusters):
     # Ensure data is float64
     X = X.astype(np.float64)
