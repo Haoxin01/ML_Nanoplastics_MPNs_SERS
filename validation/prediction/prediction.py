@@ -19,12 +19,12 @@ from validation.cache.reload_test import *
 
 def knn_prediction():
     # reload knn model pkl file from cache
-    with open('/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model/knn/knn.pkl', 'rb') as f:
+    with open('D:/Nanoplastics-ML/validation/cache/model/knn/knn.pkl', 'rb') as f:
         knn = pickle.load(f)
 
     # reload variables npy file from cache
-    X_test = np.load('/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/variable/non-mixture/Xe.npy')
-    y_test = np.load('/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/variable/non-mixture/ye.npy')
+    X_test = np.load('D:/Nanoplastics-ML/validation/cache/variable/non-mixture/Xe.npy')
+    y_test = np.load('D:/Nanoplastics-ML/validation/cache/variable/non-mixture/Xe.npy')
 
     y_pred = knn.predict(X_test)
 
@@ -43,8 +43,8 @@ def regression_prediction():
     pass
 
 def tsne_reduction(X, y):
-    Xe = np.load('/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/variable/non-mixture/Xe.npy')
-    ye = np.load('/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/variable/non-mixture/ye.npy')
+    Xe = np.load('D:/Nanoplastics-ML/validation/cache/variable/non-mixture/Xe.npy')
+    ye = np.load('D:/Nanoplastics-ML/validation/cache/variable/non-mixture/Xe.npy')
 
     # every set in X and y, concat with Xe and ye and do tsne once
     res_list = []
@@ -58,11 +58,11 @@ def tsne_reduction(X, y):
         Xe_tsne = tsne_implementation_udexcluded(Xe_temp, ye_temp, 2)
         # use knn to predict
         # reload knn model pkl file from cache
-        with open('/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model/knn/knn.pkl', 'rb') as f:
+        with open('D:/Nanoplastics-ML/validation/cache/model/knn/knn.pkl', 'rb') as f:
             knn = pickle.load(f)
         y_pred = knn.predict(Xe_tsne)
         res_list.append(y_pred[-1])
-        concentration_list.append(concentration[i])
+        # concentration_list.append(concentration[i])
 
     cm = create_confusion_matrix(y, res_list)
     plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
@@ -81,26 +81,26 @@ def data_reader():
 
 if __name__ == '__main__':
     # load data
-    path_lake = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/prediction/data/lake'
-    path_tap = '/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/prediction/data/tap'
+    path_lake = 'D:/Nanoplastics-ML/validation/prediction/data/lake'
+    path_tap = 'D:/Nanoplastics-ML/validation/prediction/data/tap'
 
     # for lake
     data = batch_data_decoder(path_tap)
     X, y, con_list, Xe, ye, cone_list = data_concat(data, if_shuffle=True, shuffle_seed=0)
-    # load pca pkl file
-    with open('/Users/shiyujiang/Desktop/Nanoplastics-ML/validation/cache/model/dimension_reduction/pca_outlier.pkl', 'rb') as f:
-        pca = pickle.load(f)
-    # map to pca space
-    X_pca = pca.transform(X)
+    # # load pca pkl file
+    # with open('D:/Nanoplastics-ML/validation/cache/model/dimension_reduction/pca_outlier.pkl', 'rb') as f:
+    #     pca = pickle.load(f)
+    # # map to pca space
+    # X_pca = pca.transform(X)
 
-    iso_forest = reload_self()
-    # out = iso_forest.predict(X_pca)
-    out = iso_forest.clf.predict(X_pca)
-    # print percentage of 1 in out
-    print(np.sum(out == 1) / len(out))
+    # iso_forest = reload_self()
+    # # out = iso_forest.predict(X_pca)
+    # out = iso_forest.clf.predict(X_pca)
+    # # print percentage of 1 in out
+    # print(np.sum(out == 1) / len(out))
 
     # tsne
-    res_list = tsne_reduction(X, y)
+    res_list = tsne_reduction(Xe, ye)
     print()
 
 
