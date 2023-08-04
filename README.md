@@ -5,8 +5,7 @@ This work applies machine learning to forecast types and concentrations of nanop
 SERS spectrums from a range of plastic and non-plastic samples to build our dataset. This data was then processed and 
 cleaned in multiple stages to make it suitable for machine learning. Using the Isolation Forest algorithm, we 
 distinguished plastic samples from non-plastic ones. The plastic samples were then further classified using machine 
-learning models like K-means, Random Forest, KNN, and SVM. Finally, we evaluated these models' performance using 
-confusion matrices to gauge their prediction accuracy.
+learning models like K-means, Random Forest, KNN, and SVM. Finally, we predict unseen plastic data using trained models.
 
 The readme file only contains the basic information of this work, please refer to the paper for more details,
  the flowchart of this work is shown below.
@@ -15,10 +14,13 @@ The readme file only contains the basic information of this work, please refer t
 
 ## Data
 ### Brief description
-Brief description of the data used in this work ......
+1. Plastic samples: PS, PMMA, PE, PLA
+2. Human-biult non-plastic samples
+3. mixture plastic samples: PS_PMMA, PS_PE, PS_PLA
+4. Unseen plastic samples: PS, PMMA, PE, PLA in tap water,  PS, PMMA, PE, PLA in lake water
 The original data is stored in the `original_data` folder for the reference.
 ### Data category
-The data used in this work is divided into several categories, including ......
+The data used in this work is divided into several categories, including sample data, regression data and mixture data. 
 ### Data augmentation
 The data augmentation algorithm used in this work is briefly described as follows:
 1. The data is divided into several categories.
