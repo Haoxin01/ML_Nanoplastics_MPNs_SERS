@@ -1,10 +1,9 @@
 # Nanoplastics-ML
 ## Introduction
-This repository contains the code for the paper "", [ChemRxiv Link]().
 This work applies machine learning to forecast types and concentrations of nanoplastics in the environment.
-SERS spectrums from a range of plastic and non-plastic samples to build our dataset. This data was then processed and 
-cleaned in multiple stages to make it suitable for machine learning. Using the Isolation Forest algorithm, we 
-distinguished plastic samples from non-plastic ones. The plastic samples were then further classified using machine 
+SERS spectrums from a range of plastic and non-plastic samples to build our dataset. This dataset is then processed in 
+multiple stages to make it suitable for machine learning. Using the Isolation Forest algorithm, we 
+distinguish plastic samples from non-plastic ones. The plastic samples are then further classified using machine 
 learning models like K-means, Random Forest, KNN, and SVM. Finally, we predict unseen plastic data using trained models.
 
 The readme file only contains the basic information of this work, please refer to the paper for more details,
@@ -18,7 +17,6 @@ The readme file only contains the basic information of this work, please refer t
 2. Human-biult non-plastic samples
 3. mixture plastic samples: PS_PMMA, PS_PE, PS_PLA
 4. Unseen plastic samples: PS, PMMA, PE, PLA in tap water,  PS, PMMA, PE, PLA in lake water
-The original data is stored in the `original_data` folder for the reference.
 ### Data category
 The data used in this work is divided into several categories, including sample data, regression data and mixture data. 
 ### Data augmentation
@@ -87,4 +85,4 @@ python validation/prediction/main.py
 Please check more information under this directory.
 
 ## Acknowledgement
-
+NSERC Discovery Grant
