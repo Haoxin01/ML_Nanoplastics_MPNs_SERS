@@ -1,7 +1,12 @@
 # Nanoplastics-ML
 ## Introduction
 This repository contains the code for the paper "", [ChemRxiv Link]().
-This work using machine learning to predict the nanoplastics concentration in the environment, ......
+This work applies machine learning to forecast types and concentrations of nanoplastics in the environment.
+SERS spectrums from a range of plastic and non-plastic samples to build our dataset. This data was then processed and 
+cleaned in multiple stages to make it suitable for machine learning. Using the Isolation Forest algorithm, we 
+distinguished plastic samples from non-plastic ones. The plastic samples were then further classified using machine 
+learning models like K-means, Random Forest, KNN, and SVM. Finally, we evaluated these models' performance using 
+confusion matrices to gauge their prediction accuracy.
 
 The readme file only contains the basic information of this work, please refer to the paper for more details,
  the flowchart of this work is shown below.

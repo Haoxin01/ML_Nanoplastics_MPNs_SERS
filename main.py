@@ -112,7 +112,7 @@ def prediction():
     # print(cm)
 
     # K nearest neighbors
-    clf = knn_model_cross_validation(Xe_tsne, ye, seed=100)
+    # clf = knn_model_cross_validation(Xe_tsne, ye, seed=100)
     # # confusion matrix
     # cm = create_confusion_matrix(all_y_test, all_y_pred)
     # plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
@@ -142,13 +142,13 @@ def prediction():
     # print(cm)
 
     #  hca model
-    clf, all_y_test, all_y_pred = hca_model(Xe_tsne, ye, n_clusters=4)
+    # clf, all_y_test, all_y_pred = hca_model(Xe_tsne, ye, n_clusters=4)
     # confusion matrix
-    cm = create_confusion_matrix(all_y_test, all_y_pred)
-    plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
-    accuracy, recall, precision, f1 = compute_metrics(all_y_test, all_y_pred)
-    print (accuracy, recall, precision, f1)
-    print(cm)
+    # cm = create_confusion_matrix(all_y_test, all_y_pred)
+    # plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
+    # accuracy, recall, precision, f1 = compute_metrics(all_y_test, all_y_pred)
+    # print (accuracy, recall, precision, f1)
+    # print(cm)
 
     # ensemble model: voting classifier of SVM, KNN, RF and K-means
     # Ensemble Model

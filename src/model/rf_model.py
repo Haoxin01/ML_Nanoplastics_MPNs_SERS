@@ -52,37 +52,40 @@ def rf_model_cross_validation(X, y, seed, cv=5):
         f.write('best_params: ' + str(best_params) + '\n')
         f.close()
 
-    # # Add your decision boundary plot and other visualizations here
+    # Add your decision boundary plot and other visualizations here
+
+    # Create a list to store the errors for each tree in the forest
+    cumulative_errors = []
+
+    # Fit the model and calculate the error for each tree
+    for n_trees in range(1, clf.n_estimators + 1):
+        clf.set_params(n_estimators=n_trees)
+        clf.fit(X, y)
+        y_pred_all = clf.predict(X)
+        error = mean_squared_error(y, y_pred_all)
+        cumulative_errors.append(error)
+
+    # Plot the cumulative errors over the number of trees
+    plt.figure(figsize=(10, 7))
+    plt.plot(range(1, clf.n_estimators + 1), cumulative_errors, marker='o')
+    plt.xlabel('Number of Trees', fontsize=24, weight='bold')
+    plt.ylabel('Cumulative Error', fontsize=24, weight='bold')
+    plt.title('Random Forest Cumulative Errors over Number of Trees', fontsize=24, weight='bold')
+    plt.show()
     #
-    # # Create a list to store the errors for each tree in the forest
-    # cumulative_errors = []
-    #
-    # # Fit the model and calculate the error for each tree
-    # for n_trees in range(1, clf.n_estimators + 1):
-    #     clf.set_params(n_estimators=n_trees)
-    #     clf.fit(X, y)
-    #     y_pred_all = clf.predict(X)
-    #     error = mean_squared_error(y, y_pred_all)
-    #     cumulative_errors.append(error)
-    #
-    # # Plot the cumulative errors over the number of trees
-    # plt.figure(figsize=(10, 7))
-    # plt.plot(range(1, clf.n_estimators + 1), cumulative_errors, marker='o')
-    # plt.xlabel('Number of Trees', fontsize=24, weight='bold')
-    # plt.ylabel('Cumulative Error', fontsize=24, weight='bold')
-    # plt.title('Random Forest Cumulative Errors over Number of Trees', fontsize=24, weight='bold')
-    # plt.show()
-    #
-    # # Initialize JS for SHAP plots
-    # shap.initjs()
-    #
-    # # Create a Kernel SHAP explainer
-    # explainer = shap.KernelExplainer(clf.predict, X_train)
-    #
-    # # Calculate shap_values for all of X
-    # shap_values = explainer.shap_values(X)
-    #
-    # # Plot the SHAP values
-    # shap.summary_plot(shap_values, X)
+    # Initialize JS for SHAP plots
+    shap.initjs()
+
+    # Create a Tree SHAP explainer
+    explainer = shap.TreeExplainer(clf, X_train)
+
+    # Calculate shap_values for all of X
+    shap_values = explainer.shap_values(X_test)
+
+    # For multi-class output, shap_values is a list.
+    # You can make a summary_plot for each class
+    for i in range(len(shap_values)):
+        print(f"Class {i} Summary Plot")
+        shap.summary_plot(shap_values[i], X_test)
 
     return clf
