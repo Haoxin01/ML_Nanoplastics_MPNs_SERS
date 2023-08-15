@@ -79,10 +79,10 @@ def prediction():
 
 
     # t-SNE dimension reduction
-    print('t-SNE dimension reduction for data_reference including undetected data_reference...')
-    # X_tsne = tsne_implementation_all(X, y, 2)
-    print('t-SNE dimension reduction for data_reference excluding undetected data_reference...')
-    Xe_tsne = tsne_implementation_udexcluded(Xe, ye, 2)
+    # print('t-SNE dimension reduction for data_reference including undetected data_reference...')
+    # # X_tsne = tsne_implementation_all(X, y, 2)
+    # print('t-SNE dimension reduction for data_reference excluding undetected data_reference...')
+    # Xe_tsne = tsne_implementation_udexcluded(Xe, ye, 2)
 
     # # LDA dimension reduction
     # print('LDA dimension reduction for data_reference including undetected data_reference...')
@@ -94,13 +94,13 @@ def prediction():
 
     # # Outliner detection START -------------------------------------------------
     # # isoforest model
-    # isf_model = isoForest(X_pca, y, result_addr)
-    # isf_model.find_best_params()
-    # isf_model.predict()
-    # isf_model.analyze()
-    # isf_model.pre_visualization()
-    # isf_model.plot_discrete()
-    # isf_model.plot_path_length_decision_boundary()
+    isf_model = isoForest(X_pca, y, result_addr)
+    isf_model.find_best_params()
+    isf_model.predict()
+    isf_model.analyze()
+    isf_model.pre_visualization()
+    isf_model.plot_discrete()
+    isf_model.plot_path_length_decision_boundary()
     # # Outliner detection END ---------------------------------------------------
 
     # Nonaplastics classification START ----------------------------------------
@@ -114,7 +114,7 @@ def prediction():
     # print(cm)
 
     # K nearest neighbors
-    clf = knn_model_cross_validation(Xe_tsne, ye, seed=100)
+    # clf = knn_model_cross_validation(Xe_tsne, ye, seed=100)
     # # confusion matrix
     # cm = create_confusion_matrix(all_y_test, all_y_pred)
     # plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
@@ -123,7 +123,7 @@ def prediction():
     # print(cm)
 
     # random forest, this use the dimension reduced data_reference
-    clf = rf_model_cross_validation(Xe, ye, seed=100)
+    # clf = rf_model_cross_validation(Xe, ye, seed=100)
     # # confusion matrix
     # cm = create_confusion_matrix(all_y_test, all_y_pred)
     # plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
@@ -144,13 +144,13 @@ def prediction():
     # print(cm)
 
     #  hca model
-    clf, all_y_test, all_y_pred = hca_model(Xe_tsne, ye, n_clusters=4)
-    # confusion matrix
-    cm = create_confusion_matrix(all_y_test, all_y_pred)
-    plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
-    accuracy, recall, precision, f1 = compute_metrics(all_y_test, all_y_pred)
-    print (accuracy, recall, precision, f1)
-    print(cm)
+    # clf, all_y_test, all_y_pred = hca_model(Xe_tsne, ye, n_clusters=4)
+    # # confusion matrix
+    # cm = create_confusion_matrix(all_y_test, all_y_pred)
+    # plot_confusion_matrix(cm, ['PE', 'PLA', 'PMMA', "PS"])
+    # accuracy, recall, precision, f1 = compute_metrics(all_y_test, all_y_pred)
+    # print (accuracy, recall, precision, f1)
+    # print(cm)
 
     # ensemble model: voting classifier of SVM, KNN, RF and K-means
     # Ensemble Model
