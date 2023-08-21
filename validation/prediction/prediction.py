@@ -85,7 +85,7 @@ if __name__ == '__main__':
     path_tap = 'D:/Nanoplastics-ML/validation/prediction/data/tap'
 
     # for lake
-    data = batch_data_decoder(path_tap)
+    data = batch_data_decoder(path_lake)
     X, y, con_list, Xe, ye, cone_list = data_concat(data, if_shuffle=True, shuffle_seed=0)
     # # load pca pkl file
     # with open('D:/Nanoplastics-ML/validation/cache/model/dimension_reduction/pca_outlier.pkl', 'rb') as f:
